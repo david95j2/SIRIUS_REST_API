@@ -1,0 +1,47 @@
+package com.example.sirius_restapi.drone.domain;
+
+import com.example.sirius_restapi.user.domain.UserEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "drones")
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class DroneEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name = "drone_voltage_min")
+    private Float droneVoltageMin;
+    @Column(name = "drone_voltage_max")
+    private Float droneVoltageMax;
+    @Column(name = "drone_type")
+    private String droneType;
+    @Column(name = "x_dimension")
+    private Integer xDimension;
+    @Column(name = "y_dimension")
+    private Integer yDimension;
+    @Column(name = "z_dimension")
+    private Integer zDimension;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
+    public PatchDroneRes toDto() {
+        PatchDroneRes patchDroneRes = new PatchDroneRes();
+        patchDroneRes.setMin(this.droneVoltageMin);
+        patchDroneRes.setMax(this.droneVoltageMax);
+        patchDroneRes.setName(this.droneType);
+        patchDroneRes.setX_dimension(this.xDimension);
+        patchDroneRes.setY_dimension(this.yDimension);
+        patchDroneRes.setZ_dimension(this.zDimension);
+        return patchDroneRes;
+    }
+}

@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserService {
     private UserRepository userRepository;
+
     public BaseResponse getUser() {
         List<UserEntity> results = userRepository.findAll();
         return new BaseResponse(ErrorCode.SUCCESS,results);
