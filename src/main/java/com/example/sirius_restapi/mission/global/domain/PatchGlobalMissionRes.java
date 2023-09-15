@@ -1,10 +1,10 @@
-package com.example.sirius_restapi.mission.domain;
+package com.example.sirius_restapi.mission.global.domain;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class PatchMissionRes {
+public class PatchGlobalMissionRes {
     private Integer id;
     private String mission_name;
     private String type;

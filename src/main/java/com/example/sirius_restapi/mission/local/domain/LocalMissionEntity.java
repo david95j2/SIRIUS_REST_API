@@ -1,0 +1,46 @@
+package com.example.sirius_restapi.mission.local.domain;
+
+import com.example.sirius_restapi.mission.global.domain.PatchGlobalMissionRes;
+import com.example.sirius_restapi.mission.global.domain.GlobalWayPointEntity;
+import com.example.sirius_restapi.user.domain.UserEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = "missions")
+@Builder
+@Getter @Setter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class LocalMissionEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(name = "mission_name")
+    private String missionName;
+    @Column(name = "type")
+    private String missionType;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "missionEntity",cascade = CascadeType.REMOVE)
+    private List<GlobalWayPointEntity> globalWayPointEntity;
+
+    public PatchGlobalMissionRes toDto() {
+        PatchGlobalMissionRes patchGlobalMissionRes = new PatchGlobalMissionRes();
+        patchGlobalMissionRes.setId(this.id);
+        patchGlobalMissionRes.setMission_name(this.missionName);
+        patchGlobalMissionRes.setType(this.missionType);
+        return patchGlobalMissionRes;
+    }
+}

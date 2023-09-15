@@ -1,6 +1,6 @@
-package com.example.sirius_restapi.mission;
+package com.example.sirius_restapi.mission.global;
 
-import com.example.sirius_restapi.mission.domain.MissionEntity;
+import com.example.sirius_restapi.mission.global.domain.GlobalMissionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,17 +9,17 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface MissionRepository extends JpaRepository<MissionEntity,Integer> {
-    @Query("select m from MissionEntity m " +
+public interface GlobalMissionRepository extends JpaRepository<GlobalMissionEntity,Integer> {
+    @Query("select m from LocalMissionEntity m " +
             "join m.userEntity u where u.id=:userId")
-    List<MissionEntity> findAllByIdUserId(@Param("userId") Integer userId);
+    List<GlobalMissionEntity> findAllByIdUserId(@Param("userId") Integer userId);
 
-    @Query("select m from MissionEntity m " +
+    @Query("select m from LocalMissionEntity m " +
             "join m.userEntity u where m.id=:missionId and u.id=:userId")
-    Optional<MissionEntity> findByIdAndUserId(@Param("missionId") Integer missionId, @Param("userId") Integer userId);
+    Optional<GlobalMissionEntity> findByIdAndUserId(@Param("missionId") Integer missionId, @Param("userId") Integer userId);
 
     @Modifying
-    @Query("delete from MissionEntity m " +
+    @Query("delete from LocalMissionEntity m " +
             "where m.id=:missionId and m.userEntity.id=:userId")
     Integer deleteByIdAndUserId(@Param("missionId") Integer missionId,@Param("userId") Integer userId);
 }
