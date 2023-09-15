@@ -29,10 +29,12 @@ public enum ErrorCode {
      * 403 FORBIDDEN: 권한이 없는 사용자의 요청
      */
     FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "권한을 확인해주세요."),
+    ADMIN_CREATED_FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "admin 유저는 이미 존재합니다."),
 
     /*
      * 404 NOT_FOUND: 리소스를 찾을 수 없음
      */
+    URL_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 URL"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않습니다."),
     INCORRECT(HttpStatus.NOT_FOUND, "비밀번호가 틀립니다."),

@@ -3,7 +3,7 @@ package com.example.sirius_restapi.exception;
 import lombok.Getter;
 
 @Getter
-public class BaseResponse {
+public class BaseResponse  {
     private Integer status;
     private String message;
 
