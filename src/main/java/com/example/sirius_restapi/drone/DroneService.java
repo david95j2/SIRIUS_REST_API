@@ -43,7 +43,7 @@ public class DroneService {
     }
 
     public BaseResponse patchDroneById(PatchDroneReq patchDroneReq, Integer droneId, Integer userId) {
-        UserEntity userEntity = (UserEntity) userService.getUserById(userId).getResult();
+        userService.getUserById(userId);
         DroneEntity droneEntity = droneRepository.findById(droneId).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
         // 값이 있는 것만 수정
         if (patchDroneReq.getMin() != null) {
@@ -83,7 +83,7 @@ public class DroneService {
         if (deletedCount != 0) {
             return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(droneId)+"번 드론이 삭제되었습니다.");
         } else {
-            throw new AppException(ErrorCode.DATA_NOT_FOUND);:
+            throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }
     }
 }

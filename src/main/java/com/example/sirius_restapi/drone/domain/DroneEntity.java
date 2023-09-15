@@ -36,6 +36,7 @@ public class DroneEntity {
 
     public PatchDroneRes toDto() {
         PatchDroneRes patchDroneRes = new PatchDroneRes();
+        patchDroneRes.setId(this.id);
         patchDroneRes.setMin(this.droneVoltageMin);
         patchDroneRes.setMax(this.droneVoltageMax);
         patchDroneRes.setName(this.droneType);

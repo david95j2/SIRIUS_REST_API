@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PatchDroneRes {
+    private Integer id;
     private Float min;
     private Float max;
     private String name;
