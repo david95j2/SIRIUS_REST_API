@@ -12,21 +12,21 @@ import java.util.Optional;
 
 public interface GlobalWaypointRepository extends JpaRepository<GlobalWayPointEntity,Integer> {
 
-    @Query("select w from GlobalWayPointEntity w join w.missionEntity m where m.id=:missionId order by w.seq")
+    @Query("select w from GlobalWayPointEntity w join w.globalMissionEntity m where m.id=:missionId order by w.seq")
     List<GlobalWayPointEntity> findAllByMissionId(@Param("missionId") Integer missionId);
 
-    @Query("select w from GlobalWayPointEntity w join w.missionEntity m where m.id=:missionId and w.id=:waypointId")
+    @Query("select w from GlobalWayPointEntity w join w.globalMissionEntity m where m.id=:missionId and w.id=:waypointId")
     Optional<GlobalWayPointEntity> findByIdAndMissionId(@Param("waypointId") Integer waypointId, @Param("missionId") Integer missionId);
 
     @Transactional
     @Modifying
     @Query("update GlobalWayPointEntity w set w.seq=w.seq+1 " +
-            "where w.missionEntity.id=:mission_id and w.seq>=:seq")
+            "where w.globalMissionEntity.id=:mission_id and w.seq>=:seq")
     void incrementSeqGreaterThan(@Param("mission_id") Integer missionId, @Param("seq") Integer seq);
 
     @Transactional
     @Modifying
     @Query("update GlobalWayPointEntity w set w.seq=w.seq-1 " +
-            "where w.missionEntity.id=:mission_id and w.seq>=:seq")
+            "where w.globalMissionEntity.id=:mission_id and w.seq>=:seq")
     void decrementSeqGreaterThan(@Param("mission_id") Integer missionId, @Param("seq") Integer seq);
 }

@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GlobalMissionRepository extends JpaRepository<GlobalMissionEntity,Integer> {
-    @Query("select m from LocalMissionEntity m " +
+    @Query("select m from GlobalMissionEntity m " +
             "join m.userEntity u where u.id=:userId")
     List<GlobalMissionEntity> findAllByIdUserId(@Param("userId") Integer userId);
 
-    @Query("select m from LocalMissionEntity m " +
+    @Query("select m from GlobalMissionEntity m " +
             "join m.userEntity u where m.id=:missionId and u.id=:userId")
     Optional<GlobalMissionEntity> findByIdAndUserId(@Param("missionId") Integer missionId, @Param("userId") Integer userId);
 
     @Modifying
-    @Query("delete from LocalMissionEntity m " +
+    @Query("delete from GlobalMissionEntity m " +
             "where m.id=:missionId and m.userEntity.id=:userId")
     Integer deleteByIdAndUserId(@Param("missionId") Integer missionId,@Param("userId") Integer userId);
 }

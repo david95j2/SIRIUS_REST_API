@@ -31,8 +31,8 @@ public class GlobalMissionEntity {
 
     @JsonManagedReference
     @JsonIgnore
-    @OneToMany(mappedBy = "missionEntity",cascade = CascadeType.REMOVE)
-    private List<GlobalWayPointEntity> globalWayPointEntity;
+    @OneToMany(mappedBy = "globalMissionEntity",cascade = CascadeType.REMOVE)
+    private List<GlobalWayPointEntity> globalWayPointEntities;
 
     public PatchGlobalMissionRes toDto() {
         PatchGlobalMissionRes patchGlobalMissionRes = new PatchGlobalMissionRes();
