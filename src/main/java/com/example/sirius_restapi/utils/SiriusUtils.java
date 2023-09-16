@@ -34,7 +34,7 @@ public class SiriusUtils {
         }
     }
 
-    public static ResponseEntity getFile(Resource file, Boolean isSample) throws IOException {
+    public static ResponseEntity getFile(Resource file, Boolean isThumbnail) throws IOException {
 
         String fileName = file.getFilename();
 //        System.out.println((file.contentLength() / 1024) / 1024 );
@@ -48,7 +48,7 @@ public class SiriusUtils {
 
         try {
             FileSystemResource resource;
-            if (isSample) {
+            if (isThumbnail) {
                 // Create a temporary file to store the thumbnail
                 File thumbnail = File.createTempFile("thumbnail", "." + fileExtension);
                 try (InputStream in = new FileInputStream(file.getFile())) {

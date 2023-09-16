@@ -45,6 +45,7 @@ public enum ErrorCode {
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
      */
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 요청입니다. 보내실 데이터를 다시 한 번 확인해주세요."),
+    TIME_METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 요청입니다. time 값은 1~23까지의 자연수로 입력해주세요."),
 
     /*
      * 409 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출

@@ -36,11 +36,10 @@ public class MapController {
     @ResponseBody
     public BaseResponse getMapsByLocationId(@PathVariable Integer user_id, @PathVariable Integer location_id,
                 @RequestParam(required = false) String date, @RequestParam(required = false) Integer time) {
-        return mapService.getMpasByLocationId(location_id,user_id,date,time);
+        return mapService.getMapsByLocationId(location_id,user_id,date,time);
     }
 
     @GetMapping("api/report/maps/{map_id}/files")
-    @ResponseBody
     public ResponseEntity<InputStreamResource> getMapFileById(@PathVariable Integer map_id) throws IOException {
         Resource file =mapService.getMpaFileById(map_id);
         return SiriusUtils.getFile(file, false);

@@ -32,7 +32,6 @@ import static com.example.sirius_restapi.map.domain.QMapEntity.mapEntity;
 @Service
 @AllArgsConstructor
 public class MapService {
-    @Autowired
     private JPAQueryFactory queryFactory;
     private MapRepository mapRepository;
     private UserService userService;
@@ -46,11 +45,12 @@ public class MapService {
                 .orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND)));
     }
 
-    public BaseResponse getMpasByLocationId(Integer locationId, Integer userId, String date, Integer time) {
+    public BaseResponse getMapsByLocationId(Integer locationId, Integer userId, String date, Integer time) {
+
         userService.getUserById(userId);
 
         JPAQuery<MapEntity> query = queryFactory.selectFrom(mapEntity)
-                .where(mapEntity.locationEntity.id.eq(locationId));
+                .where(mapEntity.mapGroupEntity.locationEntity.id.eq(locationId));
 
         if (date != null) {
             LocalDate parsedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -58,6 +58,9 @@ public class MapService {
         }
 
         if (time != null) {
+            if (time >= 24) {
+                throw new AppException(ErrorCode.TIME_METHOD_NOT_ALLOWED);
+            }
             LocalTime startTime = LocalTime.of(time, 0);
             LocalTime endTime = LocalTime.of(23, 59, 59);
             query.where(mapEntity.time.between(startTime, endTime));
