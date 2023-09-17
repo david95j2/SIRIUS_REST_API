@@ -6,6 +6,6 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PostFittingsReq {
-    @NotEmpty(message = "fitting group은 필수 입력값입니다. 키가 name인지 확인해주세요.")
+    @NotEmpty(message = "이름은 필수 입력값입니다. 키가 name인지 확인해주세요.")
     private String name;
 }

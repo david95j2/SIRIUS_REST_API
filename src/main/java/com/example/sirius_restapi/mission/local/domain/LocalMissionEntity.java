@@ -16,11 +16,17 @@ public class LocalMissionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "mission_name")
-    private String missionName;
+    private String name;
 
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "fitting_group_id")
     private FittingGroupEntity fittingGroupEntity;
+
+    public PatchLocalMissionRes toDto() {
+        PatchLocalMissionRes patchLocalMissionRes = new PatchLocalMissionRes();
+        patchLocalMissionRes.setId(this.id);
+        patchLocalMissionRes.setName(this.getName());
+        return patchLocalMissionRes;
+    }
 }
