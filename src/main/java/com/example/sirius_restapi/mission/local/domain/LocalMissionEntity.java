@@ -19,7 +19,7 @@ public class LocalMissionEntity {
     private String name;
 
     @JsonBackReference
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fitting_group_id")
     private FittingGroupEntity fittingGroupEntity;
 
@@ -28,5 +28,13 @@ public class LocalMissionEntity {
         patchLocalMissionRes.setId(this.id);
         patchLocalMissionRes.setName(this.getName());
         return patchLocalMissionRes;
+    }
+
+    // PostFitiingsReq의 필드명 및 타입이 일치하기 때문에, 별도로(PostLocalMissionReq) 생성하지않고 빌려씀.
+    public static LocalMissionEntity from(PostFittingsReq postFittingsReq,FittingGroupEntity fittingGroupEntity) {
+        return LocalMissionEntity.builder()
+                .fittingGroupEntity(fittingGroupEntity)
+                .name(postFittingsReq.getName())
+                .build();
     }
 }

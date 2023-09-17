@@ -29,15 +29,7 @@ public class DroneService {
 
     public BaseResponse postDrone(@Valid PostDroneReq postDroneReq, Integer userId) {
         UserEntity userEntity = (UserEntity) userService.getUserById(userId).getResult();
-        DroneEntity droneEntity = DroneEntity.builder()
-                .userEntity(userEntity)
-                .droneVoltageMin(postDroneReq.getMin())
-                .droneVoltageMax(postDroneReq.getMax())
-                .droneType(postDroneReq.getName())
-                .xDimension(postDroneReq.getX_dimension())
-                .yDimension(postDroneReq.getY_dimension())
-                .zDimension(postDroneReq.getZ_dimension())
-                .build();
+        DroneEntity droneEntity = DroneEntity.from(postDroneReq,userEntity);
         Integer drone_id = droneRepository.save(droneEntity).getId();
         return new BaseResponse(ErrorCode.CREATED,Integer.valueOf(drone_id)+"번 드론이 생성되었습니다.");
     }

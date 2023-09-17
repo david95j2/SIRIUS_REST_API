@@ -39,4 +39,13 @@ public class InspectionEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "inspectionEntity")
     private List<FittingGroupEntity> fittingGroupEntities;
+
+    public static InspectionEntity from(PostInspectionReq postInspectionReq, MapGroupEntity mapGroupEntity) {
+        return InspectionEntity.builder()
+                .mapGroupEntity(mapGroupEntity)
+                .name(postInspectionReq.getName())
+                .date(LocalDate.parse(postInspectionReq.getRegdate()))
+                .distance(postInspectionReq.getDistance())
+                .build();
+    }
 }

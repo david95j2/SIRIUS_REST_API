@@ -41,4 +41,12 @@ public class GlobalMissionEntity {
         patchGlobalMissionRes.setType(this.missionType);
         return patchGlobalMissionRes;
     }
+
+    public static GlobalMissionEntity from(PostGlobalMissionReq postGlobalMissionReq, UserEntity userEntity) {
+        return GlobalMissionEntity.builder()
+                .userEntity(userEntity)
+                .missionName(postGlobalMissionReq.getMission_name())
+                .missionType(postGlobalMissionReq.getType())
+                .build();
+    }
 }

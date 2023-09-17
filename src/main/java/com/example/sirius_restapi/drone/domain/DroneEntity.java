@@ -45,4 +45,16 @@ public class DroneEntity {
         patchDroneRes.setZ_dimension(this.zDimension);
         return patchDroneRes;
     }
+
+    public static DroneEntity from(PostDroneReq postDroneReq, UserEntity userEntity) {
+        return DroneEntity.builder()
+                .userEntity(userEntity)
+                .droneVoltageMin(postDroneReq.getMin())
+                .droneVoltageMax(postDroneReq.getMax())
+                .droneType(postDroneReq.getName())
+                .xDimension(postDroneReq.getX_dimension())
+                .yDimension(postDroneReq.getY_dimension())
+                .zDimension(postDroneReq.getZ_dimension())
+                .build();
+    }
 }

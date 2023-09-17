@@ -29,10 +29,7 @@ public class LocalMissionService {
         FittingGroupEntity fittingGroupEntity = fittingGroupRepository.findById(fittingId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        LocalMissionEntity localMissionEntity = LocalMissionEntity.builder()
-                .fittingGroupEntity(fittingGroupEntity)
-                .name(postFittingsReq.getName())
-                .build();
+        LocalMissionEntity localMissionEntity = LocalMissionEntity.from(postFittingsReq,fittingGroupEntity);
         Integer createdId = localMissionRepository.save(localMissionEntity).getId();
         return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(createdId)+"번 미션이 생성되었습니다.");
     }

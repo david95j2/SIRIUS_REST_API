@@ -34,4 +34,12 @@ public class UserEntity {
     public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public static UserEntity from(PostUserReq postUserReq) {
+        return UserEntity.builder()
+                .loginId(postUserReq.getLogin_id())
+                .password(postUserReq.getPassword())
+                .authority(postUserReq.getAuthority())
+                .build();
+    }
 }

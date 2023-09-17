@@ -35,11 +35,7 @@ public class UserService {
             }
         }
 
-        UserEntity userEntity = UserEntity.builder()
-                .loginId(postUserReq.getLogin_id())
-                .password(postUserReq.getPassword())
-                .authority(postUserReq.getAuthority())
-                .build();
+        UserEntity userEntity = UserEntity.from(postUserReq);
         Integer user_id = userRepository.save(userEntity).getId();
         return new BaseResponse(ErrorCode.CREATED,String.valueOf(user_id)+"번 유저가 생성되었습니다.");
     }

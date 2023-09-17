@@ -45,4 +45,11 @@ public class FittingGroupEntity {
     public void prePersist() {
         this.regdate = LocalDateTime.now();
     }
+
+    public static FittingGroupEntity from(PostFittingsReq postFittingsReq, InspectionEntity inspectionEntity) {
+        return FittingGroupEntity.builder()
+                .inspectionEntity(inspectionEntity)
+                .name(postFittingsReq.getName())
+                .build();
+    }
 }

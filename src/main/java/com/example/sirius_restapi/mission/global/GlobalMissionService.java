@@ -29,11 +29,7 @@ public class GlobalMissionService {
 
     public BaseResponse postGlobalMissions(PostGlobalMissionReq postGlobalMissionReq, Integer userId) {
         UserEntity userEntity = (UserEntity) userService.getUserById(userId).getResult();
-        GlobalMissionEntity globalMissionEntity = GlobalMissionEntity.builder()
-                .userEntity(userEntity)
-                .missionName(postGlobalMissionReq.getMission_name())
-                .missionType(postGlobalMissionReq.getType())
-                .build();
+        GlobalMissionEntity globalMissionEntity = GlobalMissionEntity.from(postGlobalMissionReq,userEntity);
         Integer mission_id = globalMissionRepository.save(globalMissionEntity).getId();
         return new BaseResponse(ErrorCode.CREATED,Integer.valueOf(mission_id)+"번 미션이 생성되었습니다.");
     }
