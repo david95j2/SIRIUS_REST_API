@@ -35,7 +35,7 @@ public class GlobalWaypointService {
         GlobalWayPointEntity globalWayPointEntity = GlobalWayPointEntity.from(postGlobalWaypointReq, globalMissionEntity);
         Integer id = globalWaypointRepository.save(globalWayPointEntity).getId();
 
-        return new BaseResponse(ErrorCode.SUCCESS,id);
+        return new BaseResponse(ErrorCode.CREATED,id);
     }
 
     public BaseResponse deleteGlobalWayPoint(Integer waypoint_id) {

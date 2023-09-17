@@ -35,7 +35,7 @@ public class GlobalMissionService {
                 .missionType(postGlobalMissionReq.getType())
                 .build();
         Integer mission_id = globalMissionRepository.save(globalMissionEntity).getId();
-        return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(mission_id)+"번 미션이 생성되었습니다.");
+        return new BaseResponse(ErrorCode.CREATED,Integer.valueOf(mission_id)+"번 미션이 생성되었습니다.");
     }
 
     public BaseResponse patchGlobalMissions(PatchGlobalMissionReq patchGlobalMissionReq, Integer missionId, Integer userId) {
@@ -51,7 +51,7 @@ public class GlobalMissionService {
         // Save the updated entity
         GlobalMissionEntity updated = globalMissionRepository.save(globalMissionEntity);
         PatchGlobalMissionRes patchGlobalMissionRes = updated.toDto();
-        return new BaseResponse(ErrorCode.SUCCESS, patchGlobalMissionRes);
+        return new BaseResponse(ErrorCode.ACCEPTED, patchGlobalMissionRes);
     }
 
     @Transactional

@@ -1,9 +1,6 @@
 package com.example.sirius_restapi.map;
 
-import com.example.sirius_restapi.map.domain.GetMapsMapping;
-import com.example.sirius_restapi.map.domain.LocationEntity;
-import com.example.sirius_restapi.map.domain.MapEntity;
-import com.example.sirius_restapi.map.domain.ThumbnailEntity;
+import com.example.sirius_restapi.map.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +23,7 @@ public interface MapRepository extends JpaRepository<MapEntity,Integer> {
             "where l.id=:locationId order by t.thumbnailRegdate desc limit 1")
     Optional<ThumbnailEntity> findByLocationId(@Param("locationId") Integer locationId);
 
+    @Query("select mg from MapEntity m join m.mapGroupEntity mg " +
+            "where m.id=:mapId")
+    Optional<MapGroupEntity> findMagGroupByMapId(@Param("mapId") Integer mapId);
 }
