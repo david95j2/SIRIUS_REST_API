@@ -46,7 +46,7 @@ public class MapController {
     }
 
     @GetMapping("api/report/{user_id}/locations/{location_id}/thumbnails")
-    public ResponseEntity<InputStreamResource> getLocationThumbnail(@PathVariable("location_id") Integer location_id) throws IOException {
+    public ResponseEntity<InputStreamResource> getLocationThumbnail(@PathVariable("user_id") String user_id, @PathVariable("location_id") Integer location_id) throws IOException {
         Resource file = mapService.getLocationThumbnail(location_id);
         return SiriusUtils.getFile(file, true);
     }

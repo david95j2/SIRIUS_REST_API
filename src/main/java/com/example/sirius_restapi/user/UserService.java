@@ -17,7 +17,7 @@ import java.util.List;
 public class UserService {
     private UserRepository userRepository;
 
-    public BaseResponse getUser() {
+    public BaseResponse getUsers() {
         List<UserEntity> results = userRepository.findAll();
         return new BaseResponse(ErrorCode.SUCCESS,results);
     }
