@@ -11,15 +11,17 @@ import java.util.Optional;
 
 public interface GlobalMissionRepository extends JpaRepository<GlobalMissionEntity,Integer> {
     @Query("select m from GlobalMissionEntity m " +
-            "join m.userEntity u where u.id=:userId")
-    List<GlobalMissionEntity> findAllByIdUserId(@Param("userId") Integer userId);
+            "join m.userEntity u where u.loginId=:loginId")
+    List<GlobalMissionEntity> findAllByIdUserId(@Param("loginId") String loginId);
 
     @Query("select m from GlobalMissionEntity m " +
-            "join m.userEntity u where m.id=:missionId and u.id=:userId")
-    Optional<GlobalMissionEntity> findByIdAndUserId(@Param("missionId") Integer missionId, @Param("userId") Integer userId);
+            "join m.userEntity u where m.id=:missionId and u.loginId=:loginId")
+    Optional<GlobalMissionEntity> findByIdAndUserId(@Param("missionId") Integer missionId, @Param("loginId") String loginId);
 
     @Modifying
-    @Query("delete from GlobalMissionEntity m " +
-            "where m.id=:missionId and m.userEntity.id=:userId")
-    Integer deleteByIdAndUserId(@Param("missionId") Integer missionId,@Param("userId") Integer userId);
+    @Query(value = "delete gm from global_missions gm " +
+            "join users u on u.id=gm.user_id " +
+            "where gm.id=:missionId and u.login_id=:loginId",
+            nativeQuery = true)
+    Integer deleteByIdAndUserId(@Param("missionId") Integer missionId,@Param("loginId") String loginId);
 }

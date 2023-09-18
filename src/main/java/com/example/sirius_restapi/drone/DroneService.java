@@ -19,24 +19,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class DroneService {
     private DroneRepository droneRepository;
     private UserService userService;
-    public BaseResponse getDrones(Integer userId) {
-        return new BaseResponse(ErrorCode.SUCCESS, droneRepository.findAllByUserId(userId));
+    public BaseResponse getDrones(String login_id) {
+        return new BaseResponse(ErrorCode.SUCCESS, droneRepository.findAllByLoginId(login_id));
     }
 
-    public BaseResponse getDroneById(Integer droneId) {
-        return new BaseResponse(ErrorCode.SUCCESS, droneRepository.findById(droneId));
+    public BaseResponse getDroneById(Integer drone_id,String login_id) {
+        return new BaseResponse(ErrorCode.SUCCESS, droneRepository.findByIdAndLoginId(drone_id,login_id));
     }
 
-    public BaseResponse postDrone(@Valid PostDroneReq postDroneReq, Integer userId) {
-        UserEntity userEntity = (UserEntity) userService.getUserById(userId).getResult();
+    public BaseResponse postDrone(@Valid PostDroneReq postDroneReq, String login_id) {
+        UserEntity userEntity = (UserEntity) userService.getUserByLoginId(login_id).getResult();
         DroneEntity droneEntity = DroneEntity.from(postDroneReq,userEntity);
         Integer drone_id = droneRepository.save(droneEntity).getId();
         return new BaseResponse(ErrorCode.CREATED,Integer.valueOf(drone_id)+"번 드론이 생성되었습니다.");
     }
 
-    public BaseResponse patchDroneById(PatchDroneReq patchDroneReq, Integer droneId, Integer userId) {
-        userService.getUserById(userId);
-        DroneEntity droneEntity = droneRepository.findById(droneId).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
+    public BaseResponse patchDroneById(PatchDroneReq patchDroneReq, Integer drone_id, String login_id) {
+        DroneEntity droneEntity = droneRepository.findByIdAndLoginId(drone_id,login_id).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
         // 값이 있는 것만 수정
         if (patchDroneReq.getMin() != null) {
             droneEntity.setDroneVoltageMin(patchDroneReq.getMin());
@@ -70,10 +69,10 @@ public class DroneService {
     }
 
     @Transactional
-    public BaseResponse deleteDroneById(Integer droneId, Integer userId) {
-        Integer deletedCount = droneRepository.deleteByIdAndUserId(droneId,userId);
+    public BaseResponse deleteDroneById(Integer drone_id, String login_id) {
+        Integer deletedCount = droneRepository.deleteByIdAndLoginId(drone_id,login_id);
         if (deletedCount != 0) {
-            return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(droneId)+"번 드론이 삭제되었습니다.");
+            return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(drone_id)+"번 드론이 삭제되었습니다.");
         } else {
             throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }

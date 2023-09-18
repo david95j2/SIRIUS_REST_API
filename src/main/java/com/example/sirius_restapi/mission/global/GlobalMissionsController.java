@@ -12,29 +12,29 @@ import org.springframework.web.bind.annotation.*;
 public class GlobalMissionsController {
     private GlobalMissionService globalMissionService;
 
-    @GetMapping("api/users/{user_id}/missions")
-    public BaseResponse getGlobalMissions(@PathVariable Integer user_id) {
-        return globalMissionService.getGlobalMissions(user_id);
+    @GetMapping("api/users/{login_id}/missions")
+    public BaseResponse getGlobalMissions(@PathVariable String login_id) {
+        return globalMissionService.getGlobalMissions(login_id);
     }
 
-    @GetMapping("api/users/{user_id}/missions/{mission_id}")
-    public BaseResponse getGlobalMissionById(@PathVariable Integer user_id,@PathVariable Integer mission_id) {
-        return globalMissionService.getGlobalMissionById(mission_id,user_id);
+    @GetMapping("api/users/{login_id}/missions/{mission_id}")
+    public BaseResponse getGlobalMissionById(@PathVariable String login_id,@PathVariable Integer mission_id) {
+        return globalMissionService.getGlobalMissionById(mission_id,login_id);
     }
 
-    @PostMapping("api/users/{user_id}/missions")
-    public BaseResponse postGlobalMissions(@PathVariable Integer user_id, @Valid @RequestBody PostGlobalMissionReq postGlobalMissionReq) {
-        return globalMissionService.postGlobalMissions(postGlobalMissionReq,user_id);
+    @PostMapping("api/users/{login_id}/missions")
+    public BaseResponse postGlobalMissions(@PathVariable String login_id, @Valid @RequestBody PostGlobalMissionReq postGlobalMissionReq) {
+        return globalMissionService.postGlobalMissions(postGlobalMissionReq,login_id);
     }
 
-    @PatchMapping("api/users/{user_id}/missions/{mission_id}")
-    public BaseResponse patchGlobalMissions(@PathVariable Integer user_id,@PathVariable Integer mission_id,
+    @PatchMapping("api/users/{login_id}/missions/{mission_id}")
+    public BaseResponse patchGlobalMissions(@PathVariable String login_id,@PathVariable Integer mission_id,
                                       @Valid @RequestBody PatchGlobalMissionReq patchGlobalMissionReq) {
-        return globalMissionService.patchGlobalMissions(patchGlobalMissionReq,mission_id,user_id);
+        return globalMissionService.patchGlobalMissions(patchGlobalMissionReq,mission_id,login_id);
     }
 
-    @DeleteMapping("api/users/{user_id}/missions/{mission_id}")
-    public BaseResponse deleteGlobalMissions(@PathVariable Integer user_id,@PathVariable Integer mission_id) {
-        return globalMissionService.deleteGlobalMissions(mission_id,user_id);
+    @DeleteMapping("api/users/{login_id}/missions/{mission_id}")
+    public BaseResponse deleteGlobalMissions(@PathVariable String login_id,@PathVariable Integer mission_id) {
+        return globalMissionService.deleteGlobalMissions(mission_id,login_id);
     }
 }

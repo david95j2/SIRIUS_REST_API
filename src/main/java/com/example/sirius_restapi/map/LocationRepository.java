@@ -9,8 +9,8 @@ import java.util.Optional;
 
 public interface LocationRepository extends JpaRepository<LocationEntity, Integer> {
     @Query("select l from LocationEntity l join l.userEntity u " +
-            "where l.id=:locationId and u.id=:userId")
-    Optional<LocationEntity> findByIdAndUserId(@Param("locationId") Integer locationId,@Param("userId") Integer userId);
+            "where l.id=:locationId and u.loginId=:loginId")
+    Optional<LocationEntity> findByIdAndLoginId(@Param("locationId") Integer locationId,@Param("loginId") String loginId);
 
     Optional<LocationEntity> findByLocation(String location);
 }

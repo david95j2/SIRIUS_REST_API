@@ -10,12 +10,12 @@ import java.util.Optional;
 
 public interface MapRepository extends JpaRepository<MapEntity,Integer> {
     @Query("select l from LocationEntity l " +
-            "join l.userEntity u where u.id=:userId")
-    List<LocationEntity> findAllByUserId(@Param("userId") Integer userId);
+            "join l.userEntity u where u.loginId=:loginId")
+    List<LocationEntity> findAllByLoginId(@Param("loginId") String loginId);
 
     @Query("select l from LocationEntity l join l.userEntity u " +
-            "where u.id=:userId and l.id=:locationId")
-    Optional<LocationEntity> findByLocationIdAndUserId(@Param("locationId") Integer locationId,@Param("userId") Integer userId);
+            "where u.loginId=:loginId and l.id=:locationId")
+    Optional<LocationEntity> findByLocationIdAndLoginId(@Param("locationId") Integer locationId,@Param("loginId") String loginId);
 
 
     // thumbnail 가져오기 용 쿼리

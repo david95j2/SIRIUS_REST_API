@@ -19,9 +19,9 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("api/users/{user_id}")
-    public BaseResponse getUserById(@PathVariable Integer user_id) {
-        return userService.getUserById(user_id);
+    @GetMapping("api/users/{login_id}")
+    public BaseResponse getUserByLoginId(@PathVariable("login_id") String login_id) {
+        return userService.getUserByLoginId(login_id);
     }
 
     @PostMapping("api/users")
@@ -34,14 +34,14 @@ public class UserController {
         return userService.postLogin(postLoginReq);
     }
 
-    @PatchMapping("api/users/{user_id}")
-    public BaseResponse patchUserById(@PathVariable Integer user_id,@Valid @RequestBody PatchUserReq patchUserReq) {
-        return userService.patchUserById(patchUserReq,user_id);
+    @PatchMapping("api/users/{login_id}")
+    public BaseResponse patchUserByLoginId(@PathVariable("login_id") String login_id,@Valid @RequestBody PatchUserReq patchUserReq) {
+        return userService.patchUserByLoginId(patchUserReq,login_id);
     }
 
 
-    @DeleteMapping("api/users/{user_id}")
-    public BaseResponse deleteUserById(@PathVariable Integer user_id, @Valid @RequestBody DeleteUserReq deleteUserReq) {
-        return userService.deleteUserById(deleteUserReq,user_id);
+    @DeleteMapping("api/users/{login_id}")
+    public BaseResponse deleteUserByLoginId(@PathVariable("login_id") String login_id, @Valid @RequestBody DeleteUserReq deleteUserReq) {
+        return userService.deleteUserByLoginId(deleteUserReq,login_id);
     }
 }

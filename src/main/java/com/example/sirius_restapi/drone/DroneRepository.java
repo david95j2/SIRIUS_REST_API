@@ -7,13 +7,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DroneRepository extends JpaRepository<DroneEntity, Integer> {
     @Query("select d from DroneEntity d " +
-            "join d.userEntity u where u.id=:userId")
-    List<DroneEntity> findAllByUserId(@Param("userId") Integer userId);
+            "join d.userEntity u where u.loginId=:loginId")
+    List<DroneEntity> findAllByLoginId(@Param("loginId")String loginId);
     @Modifying
-    @Query("delete from DroneEntity d " +
-            "where d.id=:droneId and d.userEntity.id=:userId")
-    Integer deleteByIdAndUserId(@Param("droneId") Integer droneId,@Param("userId") Integer userId);
+    @Query(value = "delete d from drones d " +
+            "join users u on u.id=d.user_id " +
+            "where d.id=:droneId and u.login_id=:loginId",
+            nativeQuery = true)
+    Integer deleteByIdAndLoginId(@Param("droneId") Integer droneId,@Param("loginId") String loginId);
+    @Query("select d from DroneEntity d join d.userEntity u " +
+            "where d.id=:droneId and u.loginId=:loginId")
+    Optional<DroneEntity> findByIdAndLoginId(@Param("droneId") Integer droneId,@Param("loginId") String loginId);
 }

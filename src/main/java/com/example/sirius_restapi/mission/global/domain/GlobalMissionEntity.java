@@ -29,7 +29,7 @@ public class GlobalMissionEntity {
 
     @JsonManagedReference
     @JsonIgnore
-    @OneToMany(mappedBy = "globalMissionEntity",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "globalMissionEntity",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GlobalWayPointEntity> globalWayPointEntities;
 
     public PatchGlobalMissionRes toDto() {

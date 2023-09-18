@@ -34,17 +34,17 @@ public class MapService {
     private LocationRepository locationRepository;
     private UserService userService;
 
-    public BaseResponse getLocations(Integer userId) {
-        return new BaseResponse(ErrorCode.SUCCESS, mapRepository.findAllByUserId(userId));
+    public BaseResponse getLocations(String loginId) {
+        return new BaseResponse(ErrorCode.SUCCESS, mapRepository.findAllByLoginId(loginId));
     }
 
-    public BaseResponse getLocationById(Integer locationId, Integer userId) {
-        return new BaseResponse(ErrorCode.SUCCESS, mapRepository.findByLocationIdAndUserId(locationId, userId)
+    public BaseResponse getLocationById(Integer locationId, String loginId) {
+        return new BaseResponse(ErrorCode.SUCCESS, mapRepository.findByLocationIdAndLoginId(locationId, loginId)
                 .orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND)));
     }
 
-    public BaseResponse postLocation(@Valid PostLocationReq postLocationReq, Integer userId) {
-        UserEntity userEntity =(UserEntity) userService.getUserById(userId).getResult();
+    public BaseResponse postLocation(@Valid PostLocationReq postLocationReq, String loginId) {
+        UserEntity userEntity =(UserEntity) userService.getUserByLoginId(loginId).getResult();
 
         // location 장소가 이미 있으면 위도,경도 update
         LocationEntity comparedLocation = locationRepository.findByLocation(postLocationReq.getLocation()).orElse(null);
@@ -52,7 +52,7 @@ public class MapService {
             PatchLocationReq patchLocationReq = new PatchLocationReq();
             patchLocationReq.setLatitude(postLocationReq.getLatitude());
             patchLocationReq.setLongitude(postLocationReq.getLongitude());
-            return patchLocation(patchLocationReq, comparedLocation.getId(),userId);
+            return patchLocation(patchLocationReq, comparedLocation.getId(),loginId);
         } else { // location 장소가 없으면 post
             LocationEntity locationEntity = LocationEntity.from(postLocationReq,userEntity);
             Integer location_id = locationRepository.save(locationEntity).getId();
@@ -60,8 +60,8 @@ public class MapService {
         }
     }
 
-    public BaseResponse patchLocation(PatchLocationReq patchLocationReq, Integer locationId, Integer userId) {
-        LocationEntity locationEntity = locationRepository.findByIdAndUserId(locationId,userId).orElseThrow(
+    public BaseResponse patchLocation(PatchLocationReq patchLocationReq, Integer locationId, String loginId) {
+        LocationEntity locationEntity = locationRepository.findByIdAndLoginId(locationId,loginId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
         if (patchLocationReq.getLocation() != null) {
@@ -79,9 +79,9 @@ public class MapService {
         return new BaseResponse(ErrorCode.CREATED,patchLocationRes);
     }
 
-    public BaseResponse getMapsByLocationId(Integer locationId, Integer userId, String date, Integer time) {
+    public BaseResponse getMapsByLocationId(Integer locationId, String loginId, String date, Integer time) {
 
-        userService.getUserById(userId);
+        userService.getUserByLoginId(loginId);
 
         JPAQuery<MapEntity> query = queryFactory.selectFrom(mapEntity)
                 .where(mapEntity.mapGroupEntity.locationEntity.id.eq(locationId));
@@ -117,7 +117,11 @@ public class MapService {
         return new BaseResponse(ErrorCode.SUCCESS, new_results);
     }
 
-    public Resource getMpaFileById(Integer mapId) {
+    public void postMaps(PostMapReq postMapReq, Integer locationId) {
+        //
+    }
+
+    public Resource getMapFileById(Integer mapId) {
         MapEntity mapEntity = mapRepository.findById(mapId).orElseThrow(()-> new AppException(ErrorCode.DATA_NOT_FOUND));
         return SiriusUtils.loadFileAsResource(Paths.get(mapEntity.getMapPath()).getParent().toString(),
                 Paths.get(mapEntity.getMapPath()).getFileName().toString());

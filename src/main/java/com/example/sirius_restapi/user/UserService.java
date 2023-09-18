@@ -22,8 +22,8 @@ public class UserService {
         return new BaseResponse(ErrorCode.SUCCESS,results);
     }
 
-    public BaseResponse getUserById(Integer userId) {
-        UserEntity result = userRepository.findById(userId).orElseThrow(()->new AppException(ErrorCode.NOT_FOUND));
+    public BaseResponse getUserByLoginId(String loginId) {
+        UserEntity result = userRepository.findByLoginId(loginId).orElseThrow(()->new AppException(ErrorCode.NOT_FOUND));
         return new BaseResponse(ErrorCode.SUCCESS,result);
     }
 
@@ -48,32 +48,32 @@ public class UserService {
         return new BaseResponse(ErrorCode.SUCCESS, "로그인에 성공하였습니다.");
     }
 
-    public BaseResponse patchUserById(PatchUserReq patchUserReq, Integer user_id) {
+    public BaseResponse patchUserByLoginId(PatchUserReq patchUserReq, String login_id) {
         // 유저 있는지 확인
-        userRepository.findById(user_id).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        UserEntity userEntity = userRepository.findByLoginId(login_id).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
         // 비밀번호 확인
-        UserEntity userEntity = userRepository.findByPassword(patchUserReq.getPassword()).orElseThrow(
-                ()-> new AppException(ErrorCode.INCORRECT));
-
+        if (!patchUserReq.getPassword().equals(userEntity.getPassword())) {
+            throw new AppException(ErrorCode.INCORRECT);
+        }
         userEntity.updatePassword(patchUserReq.getNewPassword());
 
         userRepository.save(userEntity);
 
-        return new BaseResponse(ErrorCode.ACCEPTED,Integer.valueOf(user_id)+"번 유저의 비밀번호가 변경되었습니다.");
+        return new BaseResponse(ErrorCode.ACCEPTED,login_id+" 유저의 비밀번호가 변경되었습니다.");
     }
 
     @Transactional
-    public BaseResponse deleteUserById(@Valid DeleteUserReq deleteUserReq, Integer userId) {
+    public BaseResponse deleteUserByLoginId(@Valid DeleteUserReq deleteUserReq, String loginId) {
         // 유저 있는지 확인
-        userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
+        userRepository.findByLoginId(loginId).orElseThrow(() -> new AppException(ErrorCode.NOT_FOUND));
 
         // 비밀번호 확인
         UserEntity userEntity = userRepository.findByPassword(deleteUserReq.getPassword()).orElseThrow(
                 ()-> new AppException(ErrorCode.INCORRECT));
 
-        userRepository.deleteUserById(userId);
+        userRepository.deleteUserByLoginId(loginId);
 
-        return new BaseResponse(ErrorCode.SUCCESS,ErrorCode.SUCCESS.getMessage());
+        return new BaseResponse(ErrorCode.SUCCESS,"유저가 삭제되었습니다.");
     }
 }
