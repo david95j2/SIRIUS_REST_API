@@ -38,12 +38,10 @@ public class GlobalMissionService {
         userService.getUserById(userId);
         GlobalMissionEntity globalMissionEntity = globalMissionRepository.findById(missionId).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
 
-        if (patchGlobalMissionReq.getMission_name() != null) {
-            globalMissionEntity.setMissionName(patchGlobalMissionReq.getMission_name());
+        if (patchGlobalMissionReq.getName() != null) {
+            globalMissionEntity.setName(patchGlobalMissionReq.getName());
         }
-        if (patchGlobalMissionReq.getType() != null) {
-            globalMissionEntity.setMissionType(patchGlobalMissionReq.getType());
-        }
+
         // Save the updated entity
         GlobalMissionEntity updated = globalMissionRepository.save(globalMissionEntity);
         PatchGlobalMissionRes patchGlobalMissionRes = updated.toDto();

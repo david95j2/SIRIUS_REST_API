@@ -7,5 +7,4 @@ import lombok.Setter;
 public class PatchGlobalMissionRes {
     private Integer id;
     private String mission_name;
-    private String type;
 }

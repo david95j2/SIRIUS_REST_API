@@ -5,6 +5,5 @@ import lombok.Setter;
 
 @Getter @Setter
 public class PatchGlobalMissionReq {
-    private String mission_name;
-    private String type;
+    private String name;
 }

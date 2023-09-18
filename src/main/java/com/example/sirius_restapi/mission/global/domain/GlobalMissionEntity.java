@@ -10,7 +10,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "missions")
+@Table(name = "global_missions")
 @Builder
 @Getter @Setter
 @AllArgsConstructor
@@ -19,10 +19,8 @@ public class GlobalMissionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "mission_name")
-    private String missionName;
-    @Column(name = "type")
-    private String missionType;
+    @Column(name = "name")
+    private String name;
 
     @JsonBackReference
     @ManyToOne
@@ -37,16 +35,14 @@ public class GlobalMissionEntity {
     public PatchGlobalMissionRes toDto() {
         PatchGlobalMissionRes patchGlobalMissionRes = new PatchGlobalMissionRes();
         patchGlobalMissionRes.setId(this.id);
-        patchGlobalMissionRes.setMission_name(this.missionName);
-        patchGlobalMissionRes.setType(this.missionType);
+        patchGlobalMissionRes.setMission_name(this.name);
         return patchGlobalMissionRes;
     }
 
     public static GlobalMissionEntity from(PostGlobalMissionReq postGlobalMissionReq, UserEntity userEntity) {
         return GlobalMissionEntity.builder()
                 .userEntity(userEntity)
-                .missionName(postGlobalMissionReq.getMission_name())
-                .missionType(postGlobalMissionReq.getType())
+                .name(postGlobalMissionReq.getName())
                 .build();
     }
 }

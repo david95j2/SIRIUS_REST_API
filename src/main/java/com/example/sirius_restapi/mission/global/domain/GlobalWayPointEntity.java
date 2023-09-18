@@ -23,7 +23,7 @@ public class GlobalWayPointEntity {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "mission_id")
+    @JoinColumn(name = "global_mission_id")
     private GlobalMissionEntity globalMissionEntity;
 
     public static GlobalWayPointEntity from(PostGlobalWaypointReq postGlobalWayPointReq, GlobalMissionEntity globalMissionEntity) {

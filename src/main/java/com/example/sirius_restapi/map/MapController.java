@@ -1,17 +1,16 @@
 package com.example.sirius_restapi.map;
 
 import com.example.sirius_restapi.exception.BaseResponse;
-import com.example.sirius_restapi.user.UserService;
+import com.example.sirius_restapi.map.domain.PatchLocationReq;
+import com.example.sirius_restapi.map.domain.PostLocationReq;
 import com.example.sirius_restapi.utils.SiriusUtils;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -19,7 +18,6 @@ import java.io.IOException;
 @AllArgsConstructor
 public class MapController {
     private MapService mapService;
-    private UserService userService;
     @GetMapping("api/report/{user_id}/locations")
     @ResponseBody
     public BaseResponse getLocations(@PathVariable Integer user_id) {
@@ -30,6 +28,19 @@ public class MapController {
     @ResponseBody
     public BaseResponse getLocationById(@PathVariable Integer user_id, @PathVariable Integer location_id) {
         return mapService.getLocationById(location_id,user_id);
+    }
+
+    @PostMapping("api/report/{user_id}/locations")
+    @ResponseBody
+    public BaseResponse postLocation(@PathVariable Integer user_id, @Valid @RequestBody PostLocationReq postLocationReq) {
+        return mapService.postLocation(postLocationReq,user_id);
+    }
+
+    @PatchMapping("api/report/{user_id}/locations/{location_id}")
+    @ResponseBody
+    public BaseResponse patchLocation(@PathVariable Integer user_id, @PathVariable Integer location_id,
+                                      @RequestBody PatchLocationReq patchLocationReq) {
+        return mapService.patchLocation(patchLocationReq,location_id,user_id);
     }
 
     @GetMapping("api/report/{user_id}/locations/{location_id}/maps")

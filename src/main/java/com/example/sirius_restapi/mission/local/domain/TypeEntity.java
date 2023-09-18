@@ -32,13 +32,13 @@ public class TypeEntity {
     private Boolean bottomWhole;
 
     @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "local_mission_id")
-    private LocalMissionEntity localMissionEntity;
+    @OneToOne
+    @JoinColumn(name = "local_waypoint_id")
+    private LocalWaypointEntity localWaypointEntity;
 
-    public static TypeEntity from(PostTypeReq postTypeReq, LocalMissionEntity localMissionEntity) {
+    public static TypeEntity from(PostTypeReq postTypeReq, LocalWaypointEntity localWaypointEntity) {
         return TypeEntity.builder()
-                .localMissionEntity(localMissionEntity)
+                .localWaypointEntity(localWaypointEntity)
                 .type(postTypeReq.getType())
                 .lineAuto(postTypeReq.getLine_auto())
                 .lineDirection(postTypeReq.getLine_direction())

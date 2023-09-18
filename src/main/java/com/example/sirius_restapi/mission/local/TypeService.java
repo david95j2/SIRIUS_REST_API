@@ -14,27 +14,27 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class TypeService {
     private TypeRepository typeRepository;
-    private LocalMissionRepository localMissionRepository;
+    private LocalWaypointRepository localWaypointRepository;
 
-    public BaseResponse getTypes(Integer missionId) {
-        return new BaseResponse(ErrorCode.SUCCESS, typeRepository.findAllByMissionId(missionId));
+    public BaseResponse getTypes(Integer waypoinId) {
+        return new BaseResponse(ErrorCode.SUCCESS, typeRepository.findAllByWaypointId(waypoinId));
     }
 
-    public BaseResponse getTypeById(Integer typeId, Integer missionId) {
-        return new BaseResponse(ErrorCode.SUCCESS, typeRepository.findByIdAndMissionId(typeId,missionId));
+    public BaseResponse getTypeById(Integer typeId, Integer waypointId) {
+        return new BaseResponse(ErrorCode.SUCCESS, typeRepository.findByIdAndWaypointId(typeId,waypointId));
     }
 
-    public BaseResponse postTypes(PostTypeReq postTypeReq, Integer missionId) {
-        LocalMissionEntity localMissionEntity = localMissionRepository.findById(missionId).orElseThrow(
+    public BaseResponse postTypes(PostTypeReq postTypeReq, Integer waypointId) {
+        LocalWaypointEntity localWaypointEntity = localWaypointRepository.findById(waypointId).orElseThrow(
                 ()-> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        TypeEntity typeEntity = TypeEntity.from(postTypeReq,localMissionEntity);
+        TypeEntity typeEntity = TypeEntity.from(postTypeReq,localWaypointEntity);
         Integer type_id = typeRepository.save(typeEntity).getId();
         return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(type_id)+"번 type이 생성되었습니다.");
     }
 
-    public BaseResponse patchTypesById(PatchTypeReq patchTypeReq, Integer typeId, Integer missionId) {
-        TypeEntity typeEntity = typeRepository.findByIdAndMissionId(typeId,missionId).orElseThrow(
+    public BaseResponse patchTypesById(PatchTypeReq patchTypeReq, Integer typeId, Integer wapoint_id) {
+        TypeEntity typeEntity = typeRepository.findByIdAndWaypointId(typeId,wapoint_id).orElseThrow(
                 ()-> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
         if (patchTypeReq.getType() != null) {
@@ -67,8 +67,8 @@ public class TypeService {
     }
 
     @Transactional
-    public BaseResponse deleteTypes(Integer typeId, Integer missionId) {
-        Integer deletedCount = typeRepository.deleteByIdAndMissionId(typeId,missionId);
+    public BaseResponse deleteTypes(Integer typeId, Integer waypointId) {
+        Integer deletedCount = typeRepository.deleteByIdAndWaypointId(typeId,waypointId);
         if (deletedCount != 0) {
             return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(typeId)+"번 타입이 삭제되었습니다.");
         } else {

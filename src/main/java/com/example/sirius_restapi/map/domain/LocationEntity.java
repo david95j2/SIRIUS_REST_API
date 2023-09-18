@@ -35,4 +35,22 @@ public class LocationEntity {
     @JsonIgnore
     @OneToMany(mappedBy = "locationEntity",cascade = CascadeType.REMOVE)
     private List<ThumbnailEntity> thumbnailEntities;
+
+    public static LocationEntity from(PostLocationReq postLocationReq, UserEntity userEntity) {
+        return LocationEntity.builder()
+                .userEntity(userEntity)
+                .location(postLocationReq.getLocation())
+                .latitude(postLocationReq.getLatitude())
+                .longitude(postLocationReq.getLongitude())
+                .build();
+    }
+
+    public PatchLocationRes toDto() {
+        PatchLocationRes patchLocationRes = new PatchLocationRes();
+        patchLocationRes.setId(this.id);
+        patchLocationRes.setLocation(this.location);
+        patchLocationRes.setLatitude(this.latitude);
+        patchLocationRes.setLongitude(this.longitude);
+        return patchLocationRes;
+    }
 }

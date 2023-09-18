@@ -1,5 +1,6 @@
 package com.example.sirius_restapi.drone.domain;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,7 +12,7 @@ public class PostDroneReq {
     private Float min;
     @NotNull(message = "최대전압값은 필수 입력값입니다. 키가 max인지 확인해주세요.")
     private Float max;
-    @NotEmpty(message = "드론명은 필수 입력값입니다. 키가 name인지 확인해주세요.")
+    @NotBlank(message = "드론명은 필수 입력값입니다. 키가 name인지 확인해주세요.")
     private String name;
     @NotNull(message = "x_dimension는 필수 입력값입니다. 키가 x_dimension인지 확인해주세요.")
     private Integer x_dimension;

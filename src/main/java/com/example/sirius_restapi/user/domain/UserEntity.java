@@ -21,7 +21,6 @@ public class UserEntity {
     private String loginId;
     private String password;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(name = "user_regdate")
     private LocalDateTime regdate;
 
     private String authority;

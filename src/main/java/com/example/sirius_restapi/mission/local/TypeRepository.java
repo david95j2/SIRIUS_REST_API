@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TypeRepository extends JpaRepository<TypeEntity, Integer> {
-    @Query("select t from TypeEntity t join t.localMissionEntity lm " +
-            "where lm.id=:missionId")
-    List<TypeEntity> findAllByMissionId(@Param("missionId") Integer missionId);
+    @Query("select t from TypeEntity t join t.localWaypointEntity lw " +
+            "where lw.id=:waypointId")
+    List<TypeEntity> findAllByWaypointId(@Param("waypointId") Integer waypointId);
 
-    @Query("select t from TypeEntity t join t.localMissionEntity lm " +
-            "where t.id=:typeId and lm.id=:missionId")
-    Optional<TypeEntity> findByIdAndMissionId(Integer typeId, Integer missionId);
+    @Query("select t from TypeEntity t join t.localWaypointEntity lw " +
+            "where t.id=:typeId and lw.id=:waypointId")
+    Optional<TypeEntity> findByIdAndWaypointId(@Param("typeId") Integer typeId,@Param("waypointId") Integer waypointId);
 
     @Modifying
-    @Query("delete from TypeEntity t where t.id=:typeId and t.localMissionEntity.id=:missionId")
-    Integer deleteByIdAndMissionId(@Param("typeId") Integer typeId,@Param("missionId") Integer missionId);
+    @Query("delete from TypeEntity t where t.id=:typeId and t.localWaypointEntity.id=:waypointId")
+    Integer deleteByIdAndWaypointId(@Param("typeId") Integer typeId,@Param("waypointId") Integer waypointId);
 }
