@@ -40,7 +40,7 @@ public class MapController {
     @ResponseBody
     public BaseResponse patchLocation(@PathVariable String login_id, @PathVariable Integer location_id,
                                       @RequestBody PatchLocationReq patchLocationReq) {
-        return mapService.patchLocation(patchLocationReq,location_id,login_id);
+        return mapService.patchLocation(patchLocationReq,location_id,login_id,false);
     }
 
     @GetMapping("api/report/{login_id}/locations/{location_id}/maps")

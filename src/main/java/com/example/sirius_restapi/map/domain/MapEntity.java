@@ -31,7 +31,7 @@ public class MapEntity {
     @Column(name = "map_count")
     private Integer mapCount;
     @Column(name = "map_area")
-    private Integer mapArea;
+    private Float mapArea;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     @JsonFormat(pattern = "HH:mm:ss")
@@ -43,4 +43,14 @@ public class MapEntity {
     @JoinColumn(name = "map_group_id")
     private MapGroupEntity mapGroupEntity;
 
+    public static MapEntity from(PostMapReq postMapReq, MapGroupEntity mapGroupEntity) {
+        return MapEntity.builder()
+                .mapGroupEntity(mapGroupEntity)
+                .mapPath(postMapReq.getFile_path())
+                .date(postMapReq.getDate())
+                .time(postMapReq.getTime())
+                .mapCount(postMapReq.getMap_count())
+                .mapArea(postMapReq.getMap_area())
+                .build();
+    }
 }

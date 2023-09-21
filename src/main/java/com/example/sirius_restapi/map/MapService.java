@@ -32,6 +32,8 @@ public class MapService {
     private JPAQueryFactory queryFactory;
     private MapRepository mapRepository;
     private LocationRepository locationRepository;
+    private MapGroupRepository mapGroupRepository;
+    private ThumbnailRepository thumbnailRepository;
     private UserService userService;
 
     public BaseResponse getLocations(String loginId) {
@@ -44,15 +46,23 @@ public class MapService {
     }
 
     public BaseResponse postLocation(@Valid PostLocationReq postLocationReq, String loginId) {
-        UserEntity userEntity =(UserEntity) userService.getUserByLoginId(loginId).getResult();
+        UserEntity userEntity = (UserEntity) userService.getUserByLoginId(loginId).getResult();
 
         // location 장소가 이미 있으면 위도,경도 update
         LocationEntity comparedLocation = locationRepository.findByLocation(postLocationReq.getLocation()).orElse(null);
-        if (postLocationReq.getLocation() == comparedLocation.getLocation()) {
+
+//        if (comparedLocation != null) {
+//            throw new AppException(ErrorCode.DUPLICATED_LOCATION_DATA);
+//        }
+//        LocationEntity locationEntity = LocationEntity.from(postLocationReq, userEntity);
+//        Integer location_id = locationRepository.save(locationEntity).getId();
+//        return new BaseResponse(ErrorCode.SUCCESS, Integer.valueOf(location_id) + "번 장소가 생성되었습니다.");
+
+        if (comparedLocation != null) {
             PatchLocationReq patchLocationReq = new PatchLocationReq();
             patchLocationReq.setLatitude(postLocationReq.getLatitude());
             patchLocationReq.setLongitude(postLocationReq.getLongitude());
-            return patchLocation(patchLocationReq, comparedLocation.getId(),loginId);
+            return patchLocation(patchLocationReq, comparedLocation.getId(),loginId,true);
         } else { // location 장소가 없으면 post
             LocationEntity locationEntity = LocationEntity.from(postLocationReq,userEntity);
             Integer location_id = locationRepository.save(locationEntity).getId();
@@ -60,8 +70,8 @@ public class MapService {
         }
     }
 
-    public BaseResponse patchLocation(PatchLocationReq patchLocationReq, Integer locationId, String loginId) {
-        LocationEntity locationEntity = locationRepository.findByIdAndLoginId(locationId,loginId).orElseThrow(
+    public BaseResponse patchLocation(PatchLocationReq patchLocationReq, Integer locationId, String loginId, Boolean exist) {
+        LocationEntity locationEntity = locationRepository.findByIdAndLoginId(locationId, loginId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
         if (patchLocationReq.getLocation() != null) {
@@ -76,7 +86,11 @@ public class MapService {
 
         LocationEntity updated = locationRepository.save(locationEntity);
         PatchLocationRes patchLocationRes = updated.toDto();
-        return new BaseResponse(ErrorCode.CREATED,patchLocationRes);
+        if (exist) {
+            return new BaseResponse(ErrorCode.EXIST_ACCEPTED,patchLocationRes);
+        } else {
+            return new BaseResponse(ErrorCode.ACCEPTED, patchLocationRes);
+        }
     }
 
     public BaseResponse getMapsByLocationId(Integer locationId, String loginId, String date, Integer time) {
@@ -117,23 +131,51 @@ public class MapService {
         return new BaseResponse(ErrorCode.SUCCESS, new_results);
     }
 
-    public void postMaps(PostMapReq postMapReq, Integer locationId) {
-        //
+    public Boolean getMapsByLocationIdAndDate(Integer locationId, String regdate) {
+        LocalDate date = LocalDate.parse(regdate.split("_")[0],DateTimeFormatter.ofPattern("yyyyMMdd"));
+        LocalTime time = LocalTime.parse(regdate.split("_")[1],DateTimeFormatter.ofPattern("HHmmss"));
+        List<MapEntity> results = mapRepository.findByLocationIdAndDatetime(locationId,date,time);
+        if (results.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public Integer postMaps(PostMapReq postMapReq, Integer mapGroupId, Integer location_id) {
+        // location
+        MapGroupEntity mapGroupEntity = mapGroupRepository.findByIdAndLocationId(mapGroupId,location_id).orElseThrow(
+                () -> new AppException(ErrorCode.DATA_NOT_FOUND)
+        );
+        MapEntity mapEntity = MapEntity.from(postMapReq,mapGroupEntity);
+        return mapRepository.save(mapEntity).getId();
     }
 
     public Resource getMapFileById(Integer mapId) {
-        MapEntity mapEntity = mapRepository.findById(mapId).orElseThrow(()-> new AppException(ErrorCode.DATA_NOT_FOUND));
+        MapEntity mapEntity = mapRepository.findById(mapId).orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND));
         return SiriusUtils.loadFileAsResource(Paths.get(mapEntity.getMapPath()).getParent().toString(),
                 Paths.get(mapEntity.getMapPath()).getFileName().toString());
     }
 
     public Resource getLocationThumbnail(Integer locationId) {
-        ThumbnailEntity thumbnailEntity = mapRepository.findByLocationId(locationId).orElseThrow(()-> new AppException(ErrorCode.DATA_NOT_FOUND));
+        ThumbnailEntity thumbnailEntity = mapRepository.findByLocationId(locationId).orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND));
 
-        return SiriusUtils.loadFileAsResource(Path.of(thumbnailEntity.getThumbnailPath()).getParent().toString().replace("\\","/"),
+        return SiriusUtils.loadFileAsResource(Path.of(thumbnailEntity.getThumbnailPath()).getParent().toString().replace("\\", "/"),
                 Path.of(thumbnailEntity.getThumbnailPath()).getFileName().toString());
     }
 
+    public Integer postLocationThumbnails(PostThumbnails postThumbnails,Integer locationId) {
+        LocationEntity locationEntity = locationRepository.findById(locationId).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
+
+        ThumbnailEntity thumbnailEntity = ThumbnailEntity.from(postThumbnails,locationEntity);
+        return thumbnailRepository.save(thumbnailEntity).getId();
+    }
 
 
+    public Integer postMapGroup(Integer locationId) {
+        LocationEntity locationEntity = locationRepository.findById(locationId).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
+
+        MapGroupEntity mapGroupEntity = MapGroupEntity.builder().locationEntity(locationEntity).build();
+        return mapGroupRepository.save(mapGroupEntity).getId();
+    }
 }

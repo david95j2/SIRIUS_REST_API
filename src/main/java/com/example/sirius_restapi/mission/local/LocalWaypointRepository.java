@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LocalWaypointRepository extends JpaRepository<LocalWaypointEntity, Integer> {
-    @Query("select lw from LocalWaypointEntity lw join lw.localMissionEntity lm " +
-            "where lm.id=:missionId order by lw.seq")
-    List<LocalWaypointEntity> findByMissionId(@Param("missionId") Integer missionId);
+    @Query("select lw from LocalWaypointEntity lw join lw.localDroneEntity ld " +
+            "where ld.id=:droneId order by lw.seq")
+    List<LocalWaypointEntity> findByDroneId(@Param("droneId") Integer droneId);
 
-    @Query("select lw from LocalWaypointEntity lw join lw.localMissionEntity lm " +
-            "where lw.id=:waypointId and lm.id=:missionId")
-    Optional<LocalWaypointEntity> findByIdAndMissionId(@Param("waypointId") Integer waypointId, @Param("missionId") Integer missionId);
+    @Query("select lw from LocalWaypointEntity lw join lw.localDroneEntity ld " +
+            "where lw.id=:waypointId and ld.id=:droneId")
+    Optional<LocalWaypointEntity> findByIdAndDroneId(@Param("waypointId") Integer waypointId, @Param("droneId") Integer droneId);
 
 //    @Modifying
 //    @Query("delete from LocalWaypointEntity lw " +
@@ -27,12 +27,12 @@ public interface LocalWaypointRepository extends JpaRepository<LocalWaypointEnti
     @Transactional
     @Modifying
     @Query("update LocalWaypointEntity lw set lw.seq=lw.seq+1 " +
-            "where lw.localMissionEntity.id=:mission_id and lw.seq>=:seq")
-    void incrementSeqGreaterThan(@Param("mission_id") Integer missionId, @Param("seq") Integer seq);
+            "where lw.localDroneEntity.id=:droneId and lw.seq>=:seq")
+    void incrementSeqGreaterThan(@Param("droneId") Integer droneId, @Param("seq") Integer seq);
 
     @Transactional
     @Modifying
     @Query("update LocalWaypointEntity lw set lw.seq=lw.seq-1 " +
-            "where lw.localMissionEntity.id=:mission_id and lw.seq>=:seq")
-    void decrementSeqGreaterThan(@Param("mission_id") Integer missionId, @Param("seq") Integer seq);
+            "where lw.localDroneEntity.id=:droneId and lw.seq>=:seq")
+    void decrementSeqGreaterThan(@Param("droneId") Integer droneId, @Param("seq") Integer seq);
 }

@@ -7,16 +7,14 @@ import com.example.sirius_restapi.inspection.analysis.domain.InspectionEntity;
 import com.example.sirius_restapi.inspection.analysis.domain.PostInspectionReq;
 import com.example.sirius_restapi.map.MapRepository;
 import com.example.sirius_restapi.map.domain.MapGroupEntity;
-import com.example.sirius_restapi.mission.local.FittingGroupRepository;
-import com.example.sirius_restapi.mission.local.domain.FittingGroupEntity;
-import com.example.sirius_restapi.mission.local.domain.PatchFittingsRes;
-import com.example.sirius_restapi.mission.local.domain.PostFittingsReq;
+import com.example.sirius_restapi.mission.local.LocalMissionRepository;
+import com.example.sirius_restapi.mission.local.domain.LocalMissionEntity;
+import com.example.sirius_restapi.mission.local.domain.PatchLocalMissionRes;
+import com.example.sirius_restapi.mission.local.domain.PostLocalMissionReq;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 
 @Service
@@ -24,7 +22,7 @@ import java.time.LocalDate;
 public class InspectionService {
 
     private InspectionRepository inspectionRepository;
-    private FittingGroupRepository fittingGroupRepository;
+    private LocalMissionRepository localMissionRepository;
     private MapRepository mapRepository;
 
     public BaseResponse getInspections(Integer mapId) {
@@ -50,40 +48,40 @@ public class InspectionService {
     }
 
 
-    public BaseResponse getFittingGroups(Integer inspectionId) {
-        return new BaseResponse(ErrorCode.SUCCESS,inspectionRepository.findFittingsAllByInspectId(inspectionId));
+    public BaseResponse getLocalMissions(Integer inspectionId) {
+        return new BaseResponse(ErrorCode.SUCCESS,inspectionRepository.findLocalMissionAllByInspectId(inspectionId));
     }
 
-    public BaseResponse getFittingGroupById(Integer fittingId, Integer inspectionId) {
-        return new BaseResponse(ErrorCode.SUCCESS,inspectionRepository.findByIdAndFittingId(inspectionId,fittingId).orElseThrow(
+    public BaseResponse getLocalMissionById(Integer missionId, Integer inspectionId) {
+        return new BaseResponse(ErrorCode.SUCCESS,inspectionRepository.findByIdAndMissionId(inspectionId,missionId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         ));
     }
 
-    public BaseResponse postFittingGroups(@Valid PostFittingsReq postFittingsReq, Integer inspectionId) {
+    public BaseResponse postLocalMissions(@Valid PostLocalMissionReq postLocalMissionReq, Integer inspectionId) {
         InspectionEntity inspectionEntity = inspectionRepository.findById(inspectionId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        FittingGroupEntity fittingGroupEntity = FittingGroupEntity.from(postFittingsReq,inspectionEntity);
-        Integer fittingGroup_id = fittingGroupRepository.save(fittingGroupEntity).getId();
-        return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(fittingGroup_id)+"번 Fitting Group이 생성되었습니다.");
+        LocalMissionEntity localMissionEntity = LocalMissionEntity.from(postLocalMissionReq,inspectionEntity);
+        Integer fittingGroup_id = localMissionRepository.save(localMissionEntity).getId();
+        return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(fittingGroup_id)+"번 미션이 생성되었습니다.");
     }
 
-    public BaseResponse patchFittingGroupById(PostFittingsReq postFittingsReq, Integer fittingId, Integer inspectionId) {
-        FittingGroupEntity fittingGroupEntity = fittingGroupRepository.findByIdAndInspectId(fittingId,inspectionId).orElseThrow(
+    public BaseResponse patchLocalMissions(PostLocalMissionReq postLocalMissionReq, Integer missionId, Integer inspectionId) {
+        LocalMissionEntity localMissionEntity = localMissionRepository.findByIdAndInspectId(missionId,inspectionId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        fittingGroupEntity.setName(postFittingsReq.getName());
-        FittingGroupEntity updated = fittingGroupRepository.save(fittingGroupEntity);
-        PatchFittingsRes patchFittingsRes = updated.toDto();
-        return new BaseResponse(ErrorCode.ACCEPTED,patchFittingsRes);
+        localMissionEntity.setName(postLocalMissionReq.getName());
+        LocalMissionEntity updated = localMissionRepository.save(localMissionEntity);
+        PatchLocalMissionRes patchLocalMissionRes = updated.toDto();
+        return new BaseResponse(ErrorCode.ACCEPTED, patchLocalMissionRes);
 
     }
     @Transactional
-    public BaseResponse deleteFittingGroupById(Integer fittingId, Integer inspectionId) {
-        Integer deletedCount = fittingGroupRepository.deleteByIdAndInspectId(fittingId,inspectionId);
+    public BaseResponse deleteLocalMissions(Integer missionId, Integer inspectionId) {
+        Integer deletedCount = localMissionRepository.deleteByIdAndInspectId(missionId,inspectionId);
         if (deletedCount != 0) {
-            return new BaseResponse(ErrorCode.SUCCESS, Integer.valueOf(fittingId)+"번 그룹이 삭제되었습니다.");
+            return new BaseResponse(ErrorCode.SUCCESS, Integer.valueOf(missionId)+"번 미션이 삭제되었습니다.");
         } else {
             throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }

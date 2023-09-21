@@ -1,9 +1,13 @@
 package com.example.sirius_restapi.mission.local.domain;
 
-import com.example.sirius_restapi.map.domain.MapGroupEntity;
+import com.example.sirius_restapi.inspection.analysis.domain.InspectionEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "local_missions")
@@ -17,24 +21,34 @@ public class LocalMissionEntity {
     @Column(name = "id")
     private Integer id;
     private String name;
+    @JsonFormat(pattern = "yyyy-HH-dd HH:mm:ss")
+    private LocalDateTime regdate;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fitting_group_id")
-    private FittingGroupEntity fittingGroupEntity;
+    @ManyToOne
+    @JoinColumn(name = "inspection_id")
+    private InspectionEntity inspectionEntity;
 
     public PatchLocalMissionRes toDto() {
         PatchLocalMissionRes patchLocalMissionRes = new PatchLocalMissionRes();
         patchLocalMissionRes.setId(this.id);
-        patchLocalMissionRes.setName(this.getName());
+        patchLocalMissionRes.setName(this.name);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime combinedDateTime = this.regdate;
+        String formattedDate = combinedDateTime.format(formatter);
+        patchLocalMissionRes.setRegdate(formattedDate);
         return patchLocalMissionRes;
     }
 
-    // PostFitiingsReq의 필드명 및 타입이 일치하기 때문에, 별도로(PostLocalMissionReq) 생성하지않고 빌려씀.
-    public static LocalMissionEntity from(PostFittingsReq postFittingsReq,FittingGroupEntity fittingGroupEntity) {
+    @PrePersist
+    public void prePersist() {
+        this.regdate = LocalDateTime.now();
+    }
+
+    public static LocalMissionEntity from(PostLocalMissionReq postLocalMissionReq, InspectionEntity inspectionEntity) {
         return LocalMissionEntity.builder()
-                .fittingGroupEntity(fittingGroupEntity)
-                .name(postFittingsReq.getName())
+                .inspectionEntity(inspectionEntity)
+                .name(postLocalMissionReq.getName())
                 .build();
     }
 }

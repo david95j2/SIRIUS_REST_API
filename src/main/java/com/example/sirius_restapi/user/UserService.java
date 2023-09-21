@@ -34,6 +34,10 @@ public class UserService {
                 throw new AppException(ErrorCode.ADMIN_CREATED_FORBIDDEN_ACCESS);
             }
         }
+        // 사용중인 로그인 아이디가 있는지 확인
+        if(userRepository.findByLoginId(postUserReq.getLogin_id()).orElse(null) == null) {
+            throw new AppException(ErrorCode.DUPLICATED_DATA);
+        }
 
         UserEntity userEntity = UserEntity.from(postUserReq);
         Integer user_id = userRepository.save(userEntity).getId();

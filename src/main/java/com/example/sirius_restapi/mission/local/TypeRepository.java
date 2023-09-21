@@ -21,4 +21,8 @@ public interface TypeRepository extends JpaRepository<TypeEntity, Integer> {
     @Modifying
     @Query("delete from TypeEntity t where t.id=:typeId and t.localWaypointEntity.id=:waypointId")
     Integer deleteByIdAndWaypointId(@Param("typeId") Integer typeId,@Param("waypointId") Integer waypointId);
+
+    @Query("select t from TypeEntity t join t.localWaypointEntity lw " +
+            "where lw.id=:waypointId")
+    Optional<TypeEntity> findByWayPointId(@Param("waypointId") Integer waypointId);
 }

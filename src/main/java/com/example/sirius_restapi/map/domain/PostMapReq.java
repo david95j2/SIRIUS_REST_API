@@ -8,9 +8,9 @@ import java.time.LocalTime;
 
 @Getter @Setter
 public class PostMapReq {
-    private String file_name;
+    private String file_path;
     private Integer map_count;
-    private Integer map_area;
+    private Float map_area;
     private LocalDate date;
     private LocalTime time;
 }

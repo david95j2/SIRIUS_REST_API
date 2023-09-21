@@ -7,4 +7,5 @@ import lombok.Setter;
 public class PatchLocalMissionRes {
     private Integer id;
     private String name;
+    private String regdate;
 }

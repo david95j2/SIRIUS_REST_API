@@ -6,20 +6,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface LocalMissionRepository extends JpaRepository<LocalMissionEntity,Integer> {
-    @Query("select lm from LocalMissionEntity lm join lm.fittingGroupEntity fg" +
-            " where fg.id=:fittingId")
-    List<LocalMissionEntity> findAllByFittingId(@Param("fittingId") Integer fittingId);
-
-    @Query("select lm from LocalMissionEntity lm join lm.fittingGroupEntity fg " +
-            "where fg.id=:fittingId and lm.id=:missionId")
-    Optional<LocalMissionEntity> findByIdAndFittingId(@Param("missionId") Integer missionId,@Param("fittingId") Integer fittingId);
+public interface LocalMissionRepository extends JpaRepository<LocalMissionEntity, Integer> {
+    @Query("select lm from LocalMissionEntity lm join lm.inspectionEntity i " +
+            "where i.id=:inspectionId and lm.id=:missionId")
+    Optional<LocalMissionEntity> findByIdAndInspectId(@Param("missionId") Integer missionId, @Param("inspectionId") Integer inspectionId);
 
     @Modifying
     @Query("delete from LocalMissionEntity lm " +
-            "where lm.id=:missionId and lm.fittingGroupEntity.id=:fittingId")
-    Integer deleteByIdAndFittingId(@Param("missionId") Integer missionId,@Param("fittingId") Integer fittingId);
+            "where lm.id=:missionId and lm.inspectionEntity.id=:inspectionId")
+    Integer deleteByIdAndInspectId(@Param("missionId") Integer missionId, @Param("inspectionId") Integer inspectionId);
 }

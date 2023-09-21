@@ -19,11 +19,15 @@ public enum ErrorCode {
      * 202 : 데이터 일부 or 전체 변경 성공
      */
     ACCEPTED(HttpStatus.ACCEPTED, "값이 변경되었습니다."),
+    EXIST_ACCEPTED(HttpStatus.ACCEPTED, "장소가 이미 존재하기 때문에 위도경도만 변경되었습니다."),
 
     /*
      * 400 : Request 오류
      */
-    UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "URL을 다시 확인해주세요."),
+    UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "인증되지 않은 요청입니다."),
+    TIME_METHOD_NOT_ALLOWED(HttpStatus.BAD_REQUEST, "허용되지 않은 요청입니다. time 값은 1~23까지의 자연수로 입력해주세요."),
+    INCORRECT(HttpStatus.BAD_REQUEST, "비밀번호가 틀립니다."),
+    NOT_NULL(HttpStatus.BAD_REQUEST,"빈칸을 채워주십시오."),
 
     /*
      * 403 FORBIDDEN: 권한이 없는 사용자의 요청
@@ -37,20 +41,21 @@ public enum ErrorCode {
     URL_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 URL"),
     NOT_FOUND(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다."),
     DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "데이터가 존재하지 않습니다."),
-    INCORRECT(HttpStatus.NOT_FOUND, "비밀번호가 틀립니다."),
-    NOT_NULL(HttpStatus.NOT_FOUND,"빈칸을 채워주십시오."),
     FTP_DATA_NOT_FOUND(HttpStatus.NOT_FOUND,"데이터를 확인할 수 없습니다. FTP URL 경로를 다시 확인해주세요."),
+    FTP_INFO_NOT_FOUND(HttpStatus.NOT_FOUND,"infoMap.txt를 확인할 수 없습니다. FTP URL 경로를 다시 확인해주세요."),
 
     /*
      * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
      */
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 요청입니다. 보내실 데이터를 다시 한 번 확인해주세요."),
-    TIME_METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 요청입니다. time 값은 1~23까지의 자연수로 입력해주세요."),
+
 
     /*
-     * 409 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
+     * 409 CONFLICT: 중복
      */
-    DUPLICATED_USER_NAME(HttpStatus.CONFLICT, "이미 사용중입니다."),
+    DUPLICATED_DATA(HttpStatus.CONFLICT, "이미 사용중입니다."),
+    DUPLICATED_LOCATION_DATA(HttpStatus.CONFLICT, "해당 장소는 이미 존재합니다."),
+    DUPLICATED_MAP_DATA(HttpStatus.CONFLICT, "해당 map은 이미 존재합니다."),
 
     /*
      * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류

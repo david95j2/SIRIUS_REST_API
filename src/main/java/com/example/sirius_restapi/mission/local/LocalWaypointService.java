@@ -12,31 +12,31 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class LocalWaypointService {
     private LocalWaypointRepository localWaypointRepository;
-    private LocalMissionRepository localMissionRepository;
-    public BaseResponse getLocalWaypoints(Integer missionId) {
-        return new BaseResponse(ErrorCode.SUCCESS, localWaypointRepository.findByMissionId(missionId));
+    private LocalDroneRepository localDroneRepository;
+    public BaseResponse getLocalWaypoints(Integer droneId) {
+        return new BaseResponse(ErrorCode.SUCCESS, localWaypointRepository.findByDroneId(droneId));
     }
 
-    public BaseResponse getLocalWaypointById(Integer waypointId, Integer missionId) {
-        return new BaseResponse(ErrorCode.SUCCESS, localWaypointRepository.findByIdAndMissionId(waypointId,missionId).orElseThrow(
+    public BaseResponse getLocalWaypointById(Integer waypointId, Integer droneId) {
+        return new BaseResponse(ErrorCode.SUCCESS, localWaypointRepository.findByIdAndDroneId(waypointId,droneId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         ));
     }
 
-    public BaseResponse postLocalWaypoints(PostLocalWaypointReq postLocalWaypointReq, Integer missionId) {
-        LocalMissionEntity localMissionEntity = localMissionRepository.findById(missionId).orElseThrow(
+    public BaseResponse postLocalWaypoints(PostLocalWaypointReq postLocalWaypointReq, Integer droneId) {
+        LocalDroneEntity localDroneEntity = localDroneRepository.findById(droneId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
         /* mission_id 와 seq 를 조회해서 seq가 중간에 들어올 시 update해야 함.*/
-        localWaypointRepository.incrementSeqGreaterThan(missionId, postLocalWaypointReq.getSeq());
+        localWaypointRepository.incrementSeqGreaterThan(droneId, postLocalWaypointReq.getSeq());
 
-        LocalWaypointEntity localWaypointEntity = LocalWaypointEntity.from(postLocalWaypointReq,localMissionEntity);
+        LocalWaypointEntity localWaypointEntity = LocalWaypointEntity.from(postLocalWaypointReq, localDroneEntity);
         Integer createdId = localWaypointRepository.save(localWaypointEntity).getId();
         return new BaseResponse(ErrorCode.CREATED,Integer.valueOf(createdId)+"번 waypoint가 생성되었습니다.");
     }
 
-    public BaseResponse patchLocalWaypointsById(PatchLocalWaypointReq patchLocalWaypointReq, Integer waypointId, Integer missionId) {
-        LocalWaypointEntity localWaypointEntity = localWaypointRepository.findByIdAndMissionId(waypointId,missionId).orElseThrow(
+    public BaseResponse patchLocalWaypointsById(PatchLocalWaypointReq patchLocalWaypointReq, Integer waypointId, Integer droneId) {
+        LocalWaypointEntity localWaypointEntity = localWaypointRepository.findByIdAndDroneId(waypointId,droneId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
         if (patchLocalWaypointReq.getSeq() != null) {
@@ -69,11 +69,11 @@ public class LocalWaypointService {
     }
 
     @Transactional
-    public BaseResponse deleteLocalWaypoint(Integer waypointId, Integer missionId) {
+    public BaseResponse deleteLocalWaypoint(Integer waypointId, Integer droneId) {
         /* mission_id 와 seq 를 조회해서 seq가 중간에 들어올 시 update해야 함.*/
-        LocalWaypointEntity localWaypointEntity = localWaypointRepository.findByIdAndMissionId(waypointId,missionId).orElseThrow(
+        LocalWaypointEntity localWaypointEntity = localWaypointRepository.findByIdAndDroneId(waypointId,droneId).orElseThrow(
                 ()->new AppException(ErrorCode.DATA_NOT_FOUND));
-        localWaypointRepository.decrementSeqGreaterThan(missionId, localWaypointEntity.getSeq());
+        localWaypointRepository.decrementSeqGreaterThan(droneId, localWaypointEntity.getSeq());
         localWaypointRepository.delete(localWaypointEntity);
         return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(waypointId)+"번 waypoint가 삭제되었습니다.");
     }

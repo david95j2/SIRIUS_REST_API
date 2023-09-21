@@ -21,21 +21,26 @@ public class TypeService {
     }
 
     public BaseResponse getTypeById(Integer typeId, Integer waypointId) {
-        return new BaseResponse(ErrorCode.SUCCESS, typeRepository.findByIdAndWaypointId(typeId,waypointId));
+        return new BaseResponse(ErrorCode.SUCCESS, typeRepository.findByIdAndWaypointId(typeId, waypointId));
     }
 
     public BaseResponse postTypes(PostTypeReq postTypeReq, Integer waypointId) {
         LocalWaypointEntity localWaypointEntity = localWaypointRepository.findById(waypointId).orElseThrow(
-                ()-> new AppException(ErrorCode.DATA_NOT_FOUND)
+                () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        TypeEntity typeEntity = TypeEntity.from(postTypeReq,localWaypointEntity);
+        // waypoint에 type이 이미 있으면 patch
+        TypeEntity comparedType = typeRepository.findByWayPointId(waypointId).orElse(null);
+        if (comparedType != null) {
+            throw new AppException(ErrorCode.DUPLICATED_DATA);
+        }
+        TypeEntity typeEntity = TypeEntity.from(postTypeReq, localWaypointEntity);
         Integer type_id = typeRepository.save(typeEntity).getId();
-        return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(type_id)+"번 type이 생성되었습니다.");
+        return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(type_id) + "번 type이 생성되었습니다.");
     }
 
-    public BaseResponse patchTypesById(PatchTypeReq patchTypeReq, Integer typeId, Integer wapoint_id) {
-        TypeEntity typeEntity = typeRepository.findByIdAndWaypointId(typeId,wapoint_id).orElseThrow(
-                ()-> new AppException(ErrorCode.DATA_NOT_FOUND)
+    public BaseResponse patchTypesById(PatchTypeReq patchTypeReq, Integer typeId, Integer waypoint_id) {
+        TypeEntity typeEntity = typeRepository.findByIdAndWaypointId(typeId, waypoint_id).orElseThrow(
+                () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
         if (patchTypeReq.getType() != null) {
             typeEntity.setType(patchTypeReq.getType());
@@ -68,9 +73,9 @@ public class TypeService {
 
     @Transactional
     public BaseResponse deleteTypes(Integer typeId, Integer waypointId) {
-        Integer deletedCount = typeRepository.deleteByIdAndWaypointId(typeId,waypointId);
+        Integer deletedCount = typeRepository.deleteByIdAndWaypointId(typeId, waypointId);
         if (deletedCount != 0) {
-            return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(typeId)+"번 타입이 삭제되었습니다.");
+            return new BaseResponse(ErrorCode.SUCCESS, Integer.valueOf(typeId) + "번 타입이 삭제되었습니다.");
         } else {
             throw new AppException(ErrorCode.DATA_NOT_FOUND);
         }

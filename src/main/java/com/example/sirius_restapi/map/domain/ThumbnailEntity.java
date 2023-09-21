@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @Table(name = "thumbnails")
 @Getter
@@ -19,7 +22,7 @@ public class ThumbnailEntity {
     @Column(name = "thumbnail_path")
     private String thumbnailPath;
     @Column(name = "thumbnail_regdate")
-    private String thumbnailRegdate;
+    private LocalDateTime thumbnailRegdate;
     @Column(name = "thumbnail_last_regdate")
     private String thumbnailLastRegdate;
 
@@ -27,4 +30,13 @@ public class ThumbnailEntity {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private LocationEntity locationEntity;
+
+    public static ThumbnailEntity from(PostThumbnails postThumbnails, LocationEntity locationEntity) {
+        DateTimeFormatter convertDate = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+        return ThumbnailEntity.builder()
+                .locationEntity(locationEntity)
+                .thumbnailPath(postThumbnails.getFile_path())
+                .thumbnailRegdate(LocalDateTime.parse(postThumbnails.getRegdate(),convertDate))
+                .build();
+    }
 }

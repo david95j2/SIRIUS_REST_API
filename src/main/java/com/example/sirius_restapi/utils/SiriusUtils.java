@@ -1,7 +1,10 @@
 package com.example.sirius_restapi.utils;
 
+import com.example.sirius_restapi.exception.AppException;
+import com.example.sirius_restapi.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.json.simple.JSONObject;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -9,10 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -88,6 +88,37 @@ public class SiriusUtils {
                 return "application/octet-stream";
             default:
                 return null;
+        }
+    }
+
+    public static JSONObject convertTxtToJson(String file_path) {
+        JSONObject jsonObject = new JSONObject();
+        File file = new File(file_path);
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(" : ");
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        String value = parts[1].trim();
+                        if ("number of pointcloud".equals(key)) {
+                            jsonObject.put(key, Integer.parseInt(value)); // 정수로 변환
+                        } else {
+                            try {
+                                jsonObject.put(key, Float.parseFloat(value));
+                            } catch (NumberFormatException e) {
+                                jsonObject.put(key, value);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return jsonObject;
+        } else {
+            throw new AppException(ErrorCode.FTP_INFO_NOT_FOUND);
         }
     }
 }

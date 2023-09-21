@@ -1,7 +1,8 @@
 package com.example.sirius_restapi.mission.local.domain;
 
-import com.example.sirius_restapi.map.domain.MapGroupEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,8 +32,13 @@ public class LocalWaypointEntity {
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "local_mission_id")
-    private LocalMissionEntity localMissionEntity;
+    @JoinColumn(name = "local_drone_id")
+    private LocalDroneEntity localDroneEntity;
+
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToOne(mappedBy = "localWaypointEntity",cascade = CascadeType.ALL, orphanRemoval = true)
+    private TypeEntity typeEntity;
 
     public PatchLocalWaypointRes toDto() {
         PatchLocalWaypointRes patchLocalWaypointRes = new PatchLocalWaypointRes();
@@ -48,9 +54,9 @@ public class LocalWaypointEntity {
         return patchLocalWaypointRes;
     }
 
-    public static LocalWaypointEntity from(PostLocalWaypointReq postLocalWaypointReq, LocalMissionEntity localMissionEntity) {
+    public static LocalWaypointEntity from(PostLocalWaypointReq postLocalWaypointReq, LocalDroneEntity localDroneEntity) {
         return LocalWaypointEntity.builder()
-                .localMissionEntity(localMissionEntity)
+                .localDroneEntity(localDroneEntity)
                 .seq(postLocalWaypointReq.getSeq())
                 .posX(postLocalWaypointReq.getPos_x())
                 .posY(postLocalWaypointReq.getPos_y())

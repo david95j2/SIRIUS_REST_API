@@ -1,5 +1,6 @@
 package com.example.sirius_restapi.configuration;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -8,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
+@Getter
 public class MyConfiguration implements WebMvcConfigurer {
     private static final String ALLOWED_METHOD_NAMES = "GET,HEAD,POST,PUT,DELETE,TRACE,OPTIONS,PATCH";
 
@@ -16,6 +18,18 @@ public class MyConfiguration implements WebMvcConfigurer {
 
     @Value("${webgcs.cors.user.2}")
     private String user2Ip;
+
+    @Value("${ftp.ip}")
+    private String ftpIp;
+
+    @Value("${ftp.port}")
+    private String ftpPort;
+
+    @Value("${ftp.id}")
+    private String ftpId;
+
+    @Value("${ftp.id.password}")
+    private String ftpPassword;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
