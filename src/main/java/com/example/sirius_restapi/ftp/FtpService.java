@@ -92,7 +92,6 @@ public class FtpService {
             for (File file : files) {
                 if (!file.isDirectory() && fileNameList.contains(file.getName())) {
                     /* map_groups & maps post */
-
                     if (exist) {
                         // 해당날짜에 이미 맵이 있다...?
                         throw new AppException(ErrorCode.DUPLICATED_MAP_DATA);

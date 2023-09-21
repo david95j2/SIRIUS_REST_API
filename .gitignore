@@ -1,5 +1,6 @@
 HELP.md
 external-config.properties
+external-config_v2.properties
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
