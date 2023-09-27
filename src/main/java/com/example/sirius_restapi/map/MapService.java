@@ -66,7 +66,8 @@ public class MapService {
         } else { // location 장소가 없으면 post
             LocationEntity locationEntity = LocationEntity.from(postLocationReq,userEntity);
             Integer location_id = locationRepository.save(locationEntity).getId();
-            return new BaseResponse(ErrorCode.SUCCESS,Integer.valueOf(location_id)+"번 장소가 생성되었습니다.");
+            PatchLocationRes patchLocationRes = locationEntity.toDto();
+            return new BaseResponse(ErrorCode.SUCCESS,patchLocationRes);
         }
     }
 
@@ -160,15 +161,21 @@ public class MapService {
     public Resource getLocationThumbnail(Integer locationId) {
         ThumbnailEntity thumbnailEntity = mapRepository.findByLocationId(locationId).orElseThrow(() -> new AppException(ErrorCode.DATA_NOT_FOUND));
 
-        return SiriusUtils.loadFileAsResource(Path.of(thumbnailEntity.getThumbnailPath()).getParent().toString().replace("\\", "/"),
+        return SiriusUtils.loadFileAsResource(Path.of(thumbnailEntity.getThumbnailPath()).getParent().toString(),
                 Path.of(thumbnailEntity.getThumbnailPath()).getFileName().toString());
     }
 
     public Integer postLocationThumbnails(PostThumbnails postThumbnails,Integer locationId) {
         LocationEntity locationEntity = locationRepository.findById(locationId).orElseThrow(()->new AppException(ErrorCode.DATA_NOT_FOUND));
+        // 같은 경로 및 파일이 존재하면 에러처리
+        ThumbnailEntity exists = thumbnailRepository.findByPath(postThumbnails.getFile_path()).orElse(null);
 
-        ThumbnailEntity thumbnailEntity = ThumbnailEntity.from(postThumbnails,locationEntity);
-        return thumbnailRepository.save(thumbnailEntity).getId();
+        if (exists == null) {
+            ThumbnailEntity thumbnailEntity = ThumbnailEntity.from(postThumbnails,locationEntity);
+            return thumbnailRepository.save(thumbnailEntity).getId();
+        } else {
+            return -1;
+        }
     }
 
 

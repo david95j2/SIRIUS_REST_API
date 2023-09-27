@@ -35,7 +35,8 @@ public class UserService {
             }
         }
         // 사용중인 로그인 아이디가 있는지 확인
-        if(userRepository.findByLoginId(postUserReq.getLogin_id()).orElse(null) == null) {
+
+        if(userRepository.findByLoginId(postUserReq.getLogin_id()).orElse(null) != null) {
             throw new AppException(ErrorCode.DUPLICATED_DATA);
         }
 

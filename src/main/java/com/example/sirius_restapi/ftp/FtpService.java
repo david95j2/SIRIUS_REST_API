@@ -48,14 +48,13 @@ public class FtpService {
 
     public BaseResponse postMapURLSuccess(PostMapURLSuccess postMapURLSuccess, String loginId) {
         /* 사용자가 제공한 정보와 실제 파일이 있는지 검사 */
-        String os_path = Paths.get("C:", "SIERRABASE_DB").toString();
+        String os_path = Paths.get("/hdd_ext/part6", "sirius").toString();
         Path root_path = Paths.get(os_path, loginId, postMapURLSuccess.getLocation(),
                 postMapURLSuccess.getRegdate().split("_")[0],
                 postMapURLSuccess.getRegdate().split("_")[1], "pcd");
         Integer location_id = null;
         Integer thumbnail_num = 0;
         Integer map_num = 0;
-
         JSONObject infoMap = SiriusUtils.convertTxtToJson(Paths.get(root_path.toString(), "infoMap.txt").toString());
         // thumbnails 파일 있는지 확인
         File thumbnails_folder = new File(Paths.get(root_path.toString(), "sample").toString());
@@ -70,7 +69,7 @@ public class FtpService {
                     // thumbnails 생성
                     PostThumbnails postThumbnails = new PostThumbnails();
                     postThumbnails.setFile_path(file.getPath());
-                    String thumb_datetime = file.getParent().split("\\\\")[4] + "_" + file.getParent().split("\\\\")[5];
+                    String thumb_datetime = file.getName().split("_")[0] + "_" + file.getName().split("_")[1];
                     postThumbnails.setRegdate(thumb_datetime);
                     mapService.postLocationThumbnails(postThumbnails, location_id);
                     thumbnail_num += 1;

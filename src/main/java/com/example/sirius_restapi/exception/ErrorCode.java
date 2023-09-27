@@ -54,6 +54,7 @@ public enum ErrorCode {
      * 409 CONFLICT: 중복
      */
     DUPLICATED_DATA(HttpStatus.CONFLICT, "이미 사용중입니다."),
+    DUPLICATED_THUMBNAILS_DATA(HttpStatus.CONFLICT, "해당 썸네일은 이미 존재합니다."),
     DUPLICATED_LOCATION_DATA(HttpStatus.CONFLICT, "해당 장소는 이미 존재합니다."),
     DUPLICATED_MAP_DATA(HttpStatus.CONFLICT, "해당 map은 이미 존재합니다."),
 

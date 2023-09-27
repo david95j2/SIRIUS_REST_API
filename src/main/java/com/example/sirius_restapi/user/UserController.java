@@ -1,5 +1,6 @@
 package com.example.sirius_restapi.user;
 
+import com.example.sirius_restapi.configuration.MyConfiguration;
 import com.example.sirius_restapi.exception.BaseResponse;
 import com.example.sirius_restapi.user.domain.DeleteUserReq;
 import com.example.sirius_restapi.user.domain.PatchUserReq;

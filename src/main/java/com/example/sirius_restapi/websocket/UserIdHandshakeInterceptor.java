@@ -12,19 +12,19 @@ import java.util.Map;
 public class UserIdHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, org.springframework.web.socket.WebSocketHandler wsHandler, Map<String, Object> attributes) {
-        String path = request.getURI().getPath();
-        String[] pathSegments = path.split("/");
-        if(pathSegments.length > 1) {
-            String loginId = pathSegments[1]; // login_id 추출
-            attributes.put("login_id", loginId); // WebSocket 세션에 login_id 추가
-        }
-
-        // HttpSession을 WebSocketSession의 속성으로 추가
-        if (request instanceof ServletServerHttpRequest) {
-            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-            HttpSession httpSession = servletRequest.getServletRequest().getSession();
-            attributes.put("HTTP_SESSION", httpSession); // WebSocket 세션에 HTTP_SESSION 추가
-        }
+//        String path = request.getURI().getPath();
+//        String[] pathSegments = path.split("/");
+//        if(pathSegments.length > 1) {
+//            String loginId = pathSegments[1]; // login_id 추출
+//            attributes.put("login_id", loginId); // WebSocket 세션에 login_id 추가
+//        }
+//
+//        // HttpSession을 WebSocketSession의 속성으로 추가
+//        if (request instanceof ServletServerHttpRequest) {
+//            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+//            HttpSession httpSession = servletRequest.getServletRequest().getSession();
+//            attributes.put("HTTP_SESSION", httpSession); // WebSocket 세션에 HTTP_SESSION 추가
+//        }
         return true;
     }
 

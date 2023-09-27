@@ -26,4 +26,19 @@ public class InspectionController {
     public BaseResponse postInspectionAndStartFittingApp(@PathVariable Integer map_id, @Valid @RequestBody PostInspectionReq inspectionReq) {
         return inspectionService.postInspectAndStartFittingApp(inspectionReq,map_id);
     }
+
+    @GetMapping("api/report/maps/inspections/{inspection_id}/analyses")
+    public BaseResponse getAnalyses(@PathVariable Integer inspection_id) {
+        return inspectionService.getAnalyses(inspection_id);
+    }
+
+    @GetMapping("api/report/maps/inspections/{inspection_id}/analyses/{analysis_id}")
+    public BaseResponse getAnalysisById(@PathVariable Integer inspection_id,@PathVariable Integer analysis_id) {
+        return inspectionService.getAnalysisById(analysis_id, inspection_id);
+    }
+
+    @PostMapping("api/report/maps/inspections/{inspection_id}/analyses/{analysis_id}")
+    public BaseResponse postAnalysisById(@PathVariable Integer inspection_id, @PathVariable Integer analysis_id) {
+        return inspectionService.postAnalysisById(analysis_id,inspection_id);
+    }
 }

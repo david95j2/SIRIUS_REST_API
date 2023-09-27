@@ -76,4 +76,5 @@ public class PictureService {
         return SiriusUtils.loadFileAsResource(Paths.get(pictureEntity.getFilePath()).getParent().toString(),
                 Paths.get(pictureEntity.getFilePath()).getFileName().toString());
     }
+
 }

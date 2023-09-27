@@ -18,6 +18,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class WebSocketConfiguration implements WebSocketConfigurer {
     private final WebSocketHandler chatHandler;
     private final WebSocketHandler  broadcastHandler;
+    private final WebSocketHandler airSDKHandler;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -25,6 +26,9 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                 .addInterceptors(new UserIdHandshakeInterceptor()) // 인터셉터 추가
                 .setAllowedOrigins("*");
         registry.addHandler(broadcastHandler, "test/monitoring")
+                .addInterceptors(new UserIdHandshakeInterceptor()) // 인터셉터 추가
+                .setAllowedOrigins("*");
+        registry.addHandler(airSDKHandler, "{id}/{drone_id}/airsdk/monitor")
                 .addInterceptors(new UserIdHandshakeInterceptor()) // 인터셉터 추가
                 .setAllowedOrigins("*");
     }
