@@ -1,6 +1,5 @@
 package com.example.sirius_restapi.map.domain;
 
-import com.example.sirius_restapi.mission.global.domain.GlobalWayPointEntity;
 import com.example.sirius_restapi.user.domain.UserEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;

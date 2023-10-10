@@ -1,7 +1,7 @@
 package com.example.sirius_restapi.inspection.analysis.domain;
 
 import com.example.sirius_restapi.map.domain.MapGroupEntity;
-import com.example.sirius_restapi.mission.local.domain.LocalMissionEntity;
+import com.example.sirius_restapi.mission.plan.domain.PlansEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,7 +24,6 @@ public class InspectionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    private Integer distance;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     private String name;
@@ -37,7 +36,7 @@ public class InspectionEntity {
     @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "inspectionEntity")
-    private List<LocalMissionEntity> localMissionEntities;
+    private List<PlansEntity> localMissionEntities;
 
     public static InspectionEntity from(PostInspectionReq postInspectionReq, MapGroupEntity mapGroupEntity) {
         DateTimeFormatter convertDate = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -45,7 +44,6 @@ public class InspectionEntity {
                 .mapGroupEntity(mapGroupEntity)
                 .name(postInspectionReq.getName())
                 .date(LocalDate.parse(postInspectionReq.getDate(),convertDate))
-                .distance(postInspectionReq.getDistance())
                 .build();
     }
 }

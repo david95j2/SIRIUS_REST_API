@@ -1,4 +1,4 @@
-package com.example.sirius_restapi.mission.global.domain;
+package com.example.sirius_restapi.mission.mapping.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 

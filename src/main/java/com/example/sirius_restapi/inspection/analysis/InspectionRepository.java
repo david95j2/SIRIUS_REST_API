@@ -1,7 +1,7 @@
 package com.example.sirius_restapi.inspection.analysis;
 
 import com.example.sirius_restapi.inspection.analysis.domain.InspectionEntity;
-import com.example.sirius_restapi.mission.local.domain.LocalMissionEntity;
+import com.example.sirius_restapi.mission.plan.domain.PlansEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,9 +16,9 @@ public interface InspectionRepository extends JpaRepository<InspectionEntity, In
 
     @Query("select lm from InspectionEntity i join i.localMissionEntities lm " +
             "where i.id=:inspectionId")
-    List<LocalMissionEntity> findLocalMissionAllByInspectId(@Param("inspectionId") Integer inspectionId);
+    List<PlansEntity> findLocalMissionAllByInspectId(@Param("inspectionId") Integer inspectionId);
 
     @Query("select lm from InspectionEntity i join i.localMissionEntities lm " +
             "where i.id=:inspectionId and lm.id=:missionId")
-    Optional<LocalMissionEntity> findByIdAndMissionId(@Param("inspectionId") Integer inspectionId, @Param("missionId") Integer missionId);
+    Optional<PlansEntity> findByIdAndMissionId(@Param("inspectionId") Integer inspectionId, @Param("missionId") Integer missionId);
 }

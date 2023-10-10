@@ -12,10 +12,10 @@ import com.example.sirius_restapi.inspection.picture.domain.GetPictureRes;
 import com.example.sirius_restapi.map.MapRepository;
 import com.example.sirius_restapi.map.domain.MapEntity;
 import com.example.sirius_restapi.map.domain.MapGroupEntity;
-import com.example.sirius_restapi.mission.local.LocalMissionRepository;
-import com.example.sirius_restapi.mission.local.domain.LocalMissionEntity;
-import com.example.sirius_restapi.mission.local.domain.PatchLocalMissionRes;
-import com.example.sirius_restapi.mission.local.domain.PostLocalMissionReq;
+import com.example.sirius_restapi.mission.plan.LocalMissionRepository;
+import com.example.sirius_restapi.mission.plan.domain.PlansEntity;
+import com.example.sirius_restapi.mission.plan.domain.PatchLocalMissionRes;
+import com.example.sirius_restapi.mission.plan.domain.PostLocalMissionReq;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -96,17 +96,17 @@ public class InspectionService {
         InspectionEntity inspectionEntity = inspectionRepository.findById(inspectionId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        LocalMissionEntity localMissionEntity = LocalMissionEntity.from(postLocalMissionReq, inspectionEntity);
-        Integer fittingGroup_id = localMissionRepository.save(localMissionEntity).getId();
+        PlansEntity plansEntity = PlansEntity.from(postLocalMissionReq, inspectionEntity);
+        Integer fittingGroup_id = localMissionRepository.save(plansEntity).getId();
         return new BaseResponse(ErrorCode.CREATED, Integer.valueOf(fittingGroup_id) + "번 미션이 생성되었습니다.");
     }
 
     public BaseResponse patchLocalMissions(PostLocalMissionReq postLocalMissionReq, Integer missionId, Integer inspectionId) {
-        LocalMissionEntity localMissionEntity = localMissionRepository.findByIdAndInspectId(missionId, inspectionId).orElseThrow(
+        PlansEntity plansEntity = localMissionRepository.findByIdAndInspectId(missionId, inspectionId).orElseThrow(
                 () -> new AppException(ErrorCode.DATA_NOT_FOUND)
         );
-        localMissionEntity.setName(postLocalMissionReq.getName());
-        LocalMissionEntity updated = localMissionRepository.save(localMissionEntity);
+        plansEntity.setName(postLocalMissionReq.getName());
+        PlansEntity updated = localMissionRepository.save(plansEntity);
         PatchLocalMissionRes patchLocalMissionRes = updated.toDto();
         return new BaseResponse(ErrorCode.ACCEPTED, patchLocalMissionRes);
 
